@@ -71,6 +71,15 @@ class SWxSchema:
     use_defaults: `Optional[bool]`
         Whether or not to load the default global and variable attribute schema files. These
         default schema files contain only the requirements for CDF ISTP validation.
+
+    Examples
+    --------
+    >>> from swxschema.schema import SWxSchema
+    >>> schema = SWxSchema(use_defaults=True)
+    >>> # Get Information about the CATDESC Attriube
+    >>> my_info = schema.measurement_attribute_info(attribute_name="CATDESC")
+    >>> # Get the template for required global attributes
+    >>> global_template = schema.global_attribute_template()
     """
 
     def __init__(
