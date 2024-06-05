@@ -1,0 +1,112 @@
+[build-system]
+requires = ["setuptools>=45",
+            "setuptools_scm[toml]>=6.2",
+            "wheel"]
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = "swxschema"
+description = "A Python package to support metadata attriubte management for Space Weather data processing pipelines."
+readme = "README.rst"
+dynamic = ["version"]
+authors = [{name = "Andrew Robbertz", email="a.robbertz@gmail.com"}]
+license = {file = "LICENSE.rst"}
+requires-python = ">=3.9"
+keywords = ["swxschema", "nasa mission", "space weather"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: Apache 2.0",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+  'pyyaml>=5.3.1',
+]
+
+[project.optional-dependencies]
+dev = [
+  'pandas>=2.2.0',
+  'coverage>=5.0.3',
+  'pytest==8.0.0',
+  'pytest-cov==4.1.0',
+  'black==24.1.1',
+  'flake8==7.0.0',
+  'coverage[toml]==7.4.1'
+]
+
+docs = [
+  'pandas>=2.2.0',
+  'sphinx==7.2.6',
+  'sphinx-automodapi==0.16.0',
+  'sphinx-copybutton==0.5.2'
+]
+
+test = [
+  'pandas>=2.2.0',
+  'pytest==8.0.0',
+  'pytest-cov==4.1.0',
+  'coverage[toml]==7.4.1'
+]
+
+style = [
+  'black==24.1.1',
+  'flake8==7.0.0',
+  'rstcheck==6.2.0',
+]
+
+[tool.setuptools.package-data]
+swxschema = ["data/*"]
+
+[tool.setuptools]
+packages = ["swxschema"]
+
+[tool.setuptools_scm]
+write_to = "swxschema/_version.py"
+
+[tool.pytest.ini_options]
+testpaths = [
+   "swxschema/tests",
+   "swxschema/util/tests",
+   "docs"
+]
+doctest_plus = "enabled"
+text_file_format = "rst"
+addopts = "--doctest-rst"
+
+[tool.coverage.run]
+omit = [
+  'swxschema/__init*',
+  'swxschema/conftest.py',
+  'swxschema/*setup_package*',
+  'swxschema/tests/*',
+  'swxschema/*/tests/*',
+  'swxschema/extern/*',
+  'swxschema/version*',
+  '*/swxschema/__init*',
+  '*/swxschema/conftest.py',
+  '*/swxschema/*setup_package*',
+  '*/swxschema/tests/*',
+  '*/swxschema/*/tests/*',
+  '*/swxschema/extern/*',
+  '*/swxschema/version*',
+]
+
+[tool.rstcheck]
+report_level = "WARNING"
+ignore_roles = [
+  "py:class",
+  "py:class",
+  "file",
+]
+ignore_directives = [
+    "plot",
+    "doctest",
+    "automodapi",
+    "csv-table",
+]
+ignore_messages = "not referenced"

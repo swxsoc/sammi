@@ -1,0 +1,74 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.183.0/containers/python-3
+{
+	"name": "Ubuntu 20.04 Python 3",
+	// Repo where this image's Dockerfile is maintained: https://github.com/HERMES-SOC/docker-lambda-base
+	"image": "public.ecr.aws/w5r9l1c8/dev-swsoc-docker-lambda-base:latest",
+	"initializeCommand": "docker logout public.ecr.aws && docker pull public.ecr.aws/w5r9l1c8/dev-swsoc-docker-lambda-base:latest",
+	// If you want to run the production version of the container, comment out the image and initializeCommand lines above and uncomment the line below.
+	// "image": "public.ecr.aws/w5r9l1c8/swsoc-docker-lambda-base:latest",
+	// "initializeCommand": "docker logout public.ecr.aws && docker pull public.ecr.aws/w5r9l1c8/swsoc-docker-lambda-base:latest",
+	"customizations": {
+		"vscode": {
+			// Set *default* container specific settings.json values on container create.
+			"settings": {
+				"python.pythonPath": "/usr/bin/python3",
+				"python.testing.unittestEnabled": false,
+				"python.testing.pytestEnabled": true,
+				"python.languageServer": "Pylance",
+				//PyLint Settings
+				"pylint.enabled": true,
+				"pylint.path": [
+					"/usr/bin/pylint"
+				],
+				"pylint.lintOnChange": true,
+				// Black Settings
+				"python.editor.defaultFormatter": "ms-python.black-formatter",
+				"python.editor.formatOnSave": true,
+				"black-formatter.path": [
+					"/usr/local/bin/black"
+				],
+				"black-formatter.args": [
+					"--line-length",
+					"100"
+				],
+				// Flake8 Settings
+				"flake8.path": [
+					"/usr/local/bin/flake8"
+				],
+				"flake8.lintOnChange": true,
+				// Terminal Settings
+				"terminal.integrated.defaultProfile.linux": "bash (login)",
+				"terminal.integrated.profiles.linux": {
+					"bash (login)": {
+						"path": "bash"
+					}
+				}
+			},
+			// Add the IDs of extensions you want installed when the container is created.
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.pylint",
+				"ms-python.black-formatter",
+				"ms-python.flake8",
+				"marklarah.pre-commit-vscode",
+				"ms-toolsai.jupyter",
+				"ms-toolsai.jupyter-renderers",
+				"ms-toolsai.jupyter-keymap",
+				"jithurjacob.nbpreviewer"
+			],
+		}
+	},
+	// Mount to a volume if you'd like to persist data to your disk
+	"mounts": [
+		// Mounds your local bach_profile to the container's bashrc
+		"source=${localEnv:HOME}/.bash_profile,target=/home/vscode/.bashrc,type=bind,consistency=cached"
+	],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// package is uninstalled from the container image after it is created to avoid circular import errors during development 
+	"postCreateCommand": "sudo pip3 uninstall swxschema -y",
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode"
+}
