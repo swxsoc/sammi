@@ -1,0 +1,18 @@
+
+div.related ul{
+    background-color:#182751 !important;
+}
+
+div.sphinxsidebar h4{
+    border: 1px solid 182751;
+    background-color: #182751;
+}
+
+div.sphinxsidebar h3{
+    border: 1px solid 182751;
+    background-color: #182751;
+}
+
+h1, h2, h3 {
+    color:#b21f2b;
+}
