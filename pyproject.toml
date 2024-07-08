@@ -5,7 +5,7 @@ requires = ["setuptools>=45",
 build-backend = 'setuptools.build_meta'
 
 [project]
-name = "swxschema"
+name = "sammi"
 description = "A Python package to support metadata attriubte management for Space Weather data processing pipelines."
 readme = "README.rst"
 dynamic = ["version"]
