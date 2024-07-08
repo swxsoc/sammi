@@ -2,7 +2,7 @@
 Overview
 ========
 
-SWxSchema is a python package that provides a schema for metadata attributes within space weather data products.
+SAMMI (Shared Attribute and Metadata Management Interface) is a python package that provides a schema for metadata attributes within space weather data products.
 This package is a SWxSOC project and can be used in conjunction with other SWxSOC projects, or as a standalone package. 
 
 .. start-badges
