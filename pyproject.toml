@@ -12,7 +12,7 @@ dynamic = ["version"]
 authors = [{name = "Andrew Robbertz", email="a.robbertz@gmail.com"}]
 license = {file = "LICENSE.rst"}
 requires-python = ">=3.9"
-keywords = ["swxschema", "nasa mission", "space weather"]
+keywords = ["sammi", "nasa mission", "space weather"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: Apache 2.0",
@@ -62,18 +62,18 @@ style = [
 ]
 
 [tool.setuptools.package-data]
-swxschema = ["data/*"]
+sammi = ["data/*"]
 
 [tool.setuptools]
-packages = ["swxschema"]
+packages = ["sammi"]
 
 [tool.setuptools_scm]
-write_to = "swxschema/_version.py"
+write_to = "sammi/_version.py"
 
 [tool.pytest.ini_options]
 testpaths = [
-   "swxschema/tests",
-   "swxschema/util/tests",
+   "sammi/tests",
+   "sammi/util/tests",
    "docs"
 ]
 doctest_plus = "enabled"
@@ -82,20 +82,20 @@ addopts = "--doctest-rst"
 
 [tool.coverage.run]
 omit = [
-  'swxschema/__init*',
-  'swxschema/conftest.py',
-  'swxschema/*setup_package*',
-  'swxschema/tests/*',
-  'swxschema/*/tests/*',
-  'swxschema/extern/*',
-  'swxschema/version*',
-  '*/swxschema/__init*',
-  '*/swxschema/conftest.py',
-  '*/swxschema/*setup_package*',
-  '*/swxschema/tests/*',
-  '*/swxschema/*/tests/*',
-  '*/swxschema/extern/*',
-  '*/swxschema/version*',
+  'sammi/__init*',
+  'sammi/conftest.py',
+  'sammi/*setup_package*',
+  'sammi/tests/*',
+  'sammi/*/tests/*',
+  'sammi/extern/*',
+  'sammi/version*',
+  '*/sammi/__init*',
+  '*/sammi/conftest.py',
+  '*/sammi/*setup_package*',
+  '*/sammi/tests/*',
+  '*/sammi/*/tests/*',
+  '*/sammi/extern/*',
+  '*/sammi/version*',
 ]
 
 [tool.rstcheck]

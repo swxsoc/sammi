@@ -2,18 +2,21 @@ from pathlib import Path
 
 import pytest
 
-from imap_processing.cdf.cdf_attribute_manager import CdfAttributeManager
+from sammi.cdf_attribute_manager import CdfAttributeManager
 
 
-def test_default_attr_schema():
+@pytest.fixture()
+def cdf_manager():
+    """Initialize CdfAttributeManager with default properties."""
+    return CdfAttributeManager(Path(__file__).parent.parent / "data")
+
+
+def test_default_attr_schema(cdf_manager):
     """
     Test function that covers:
         _load_default_global_attr_schema
         _load_default_variable_attr_schema
     """
-
-    # Initialize CdfAttributeManager object which loads in default schema
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
 
     # Default global tests
     assert cdf_manager.global_attribute_schema["DOI"]["required"] is False
@@ -32,14 +35,13 @@ def test_default_attr_schema():
     )
 
 
-def test_load_global_attribute():
+def test_load_global_attribute(cdf_manager):
     """
     Test function that covers:
         load_global_attributes
     """
 
     # Initialize CdfAttributeManager object which loads in default info
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
     cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
 
     # Testing information has been loaded in
@@ -72,7 +74,7 @@ def test_load_global_attribute():
         assert cdf_manager._global_attributes["DOI"] == "test"
 
     # Load in different data
-    cdf_manager.source_dir = Path(__file__).parent.parent / "cdf" / "test_data"
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
 
     # Testing attributes carried over
@@ -103,17 +105,13 @@ def test_load_global_attribute():
         assert attr in cdf_manager.global_attribute_schema.keys()
 
 
-def test_get_global_attributes():
+def test_get_global_attributes(cdf_manager):
     """
     Test function that covers:
         get_global_attributes
     """
-
-    # Initialize CdfAttributeManager object which loads in default info
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
-
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent.parent / "cdf" / "test_data"
+    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
@@ -161,12 +159,9 @@ def test_get_global_attributes():
             assert attr_name in test_get_global_attrs.keys()
 
 
-def test_instrument_id_format():
-    # Initialize CdfAttributeManager object which loads in default info
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
-
+def test_instrument_id_format(cdf_manager):
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent.parent / "cdf" / "test_data"
+    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
@@ -191,12 +186,9 @@ def test_instrument_id_format():
         assert cdf_manager._global_attributes["imap_test_T1_test"]["Project"]
 
 
-def test_add_global_attribute():
-    # Initialize CdfAttributeManager object which loads in default info
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
-
+def test_add_global_attribute(cdf_manager):
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent.parent / "cdf" / "test_data"
+    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
     # Changing a dynamic global variable
@@ -229,16 +221,14 @@ def test_add_global_attribute():
     assert test_get_global_attrs["Logical_source"] is None
 
 
-def test_variable_attribute():
+def test_variable_attribute(cdf_manager):
     """
     Test function that covers:
         load_variable_attributes
         get_variable_attributes
     """
 
-    # Creating CdfAttributeManager object, loading in default data
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
-    cdf_manager.source_dir = Path(__file__).parent.parent / "cdf" / "test_data"
+    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     # Loading in test data
     cdf_manager.load_variable_attributes("imap_test_variable.yaml")
@@ -281,12 +271,9 @@ def test_variable_attribute():
         assert cdf_manager._variable_attributes["default_attrs"]["CATDESC"] == "test"
 
 
-def test_get_variable_attributes():
-    # Creating CdfAttributeManager object, loading in default data
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "cdf")
-
+def test_get_variable_attributes(cdf_manager):
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent.parent / "cdf" / "test_data"
+    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     cdf_manager.load_variable_attributes("imap_test_variable.yaml")
 

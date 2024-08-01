@@ -1,322 +1,384 @@
 """
-Class for creating and managing CDF attrs.
+This module provides schema metadata templates an information.
 
-Developed based of HermesDataSchema from HERMES-SOC/hermes_core.
 """
 
-from __future__ import annotations
-
-import logging
 from pathlib import Path
-
+from collections import OrderedDict
+from typing import Optional
 import yaml
 
-DEFAULT_GLOBAL_CDF_ATTRS_FILE = "imap_default_global_cdf_attrs.yaml"
-DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE = "default_global_cdf_attrs_schema.yaml"
-DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE = "default_variable_cdf_attrs_schema.yaml"
+import swxschema
+
+__all__ = ["SWxSchema"]
+
+DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE = "swxsoc_default_global_cdf_attrs_schema.yaml"
+DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE = "swxsoc_default_variable_cdf_attrs_schema.yaml"
 
 
-class CdfAttributeManager:
+class SWxSchema:
     """
-    Class for creating and managing CDF attributes based out of yaml files.
+    Class representing a schema for data requirements and formatting. The SWxSOC Default Schema
+    only includes attributes required for ISTP compliance. Additional mission-specific attributes
+    or requirements should be added through additional global and variable schema layers. For an
+    example of how to layer schema files, please see the HERMES mission core package, and
+    `HermesDataSchema` extension of the `SWXSchema` class.
 
-    This class is based on the HERMES SWxSOC project for managing CDF attributes, but
-    is intended to be a flexible and very lightweight way of managing CDF attribute
-    creation and validation.
+    There are two main components to the Space Weather Data Schema, including both global and
+    variable attribute information.
 
-    To use, you can load one or many global and variable attribute files:
+    Global schema information is loaded from YAML (dict-like) files in the following format:
 
-    .. code::
+    .. code-block:: yaml
 
-        cdf_attr_manager = CdfAttributeManager(data_dir)
-        cdf_attr_manager.load_global_attributes("global_attrs.yaml")
-        cdf_attr_manager.load_global_attributes("instrument_global_attrs.yaml")
-        cdf_attr_manager.load_variable_attributes("variable_attrs.yaml")
+        attribute_name:
+            description: >
+                Include a meaningful description of the attribute and context needed to understand
+                its values.
+            default: <string> # A default value for the attribute if needed/desired
+            required: <bool> # Whether the attribute is required
 
-    Later files will overwrite earlier files if the same attribute is defined.
+    Variable schema information is loaded from YAML (dict-like) files in the following format:
 
-    You can then get the global and variable attributes:
+    .. code-block:: yaml
 
-    If you provide an instrument_id, it will also add the attributes defined under
-    instrument_id. If this is not included, then only the attributes defined in the top
-    level of the file are used.
-
-    .. code::
-
-        # Instrument ID is optional for refining the attributes used from the file
-        global_attrs = cdf_attr_manager.get_global_attributes(instrument_id)
-        variable_attrs = cdf_attr_manager.get_variable_attributes(variable_name)
-
-    The variable and global attributes are validated against the schemas upon calling
-    ``get_global_attributes`` and ``get_variable_attributes``.
+        attribute_key:
+            attribute_name:
+                description: >
+                    Include a meaningful description of the attribute and context needed to understand
+                    its values.
+                required: <bool> # Whether the attribute is required
+                valid_values: <list> # A list of valid values that the attribute can take.
+                alternate: <string> An additional attribute name that can be treated as an alternative of the given attribute.
+        data:
+            - attribute_name
+            - ...
+        support_data:
+            - ...
+        metadata:
+            - ...
 
     Parameters
     ----------
-    data_dir : pathlib.Path
-        The directory containing the schema and variable files (nominally config/).
+    global_schema_layers :  `Optional[list[Path]]`
+        Absolute file paths to global attribute schema files. These schema files are layered
+        on top of one another in a latest-priority ordering. That is, the latest file that modifies
+        a common schema attribute will take precedence over earlier values for a given attribute.
+    variable_schema_layers :  `Optional[list[Path]]`
+        Absolute file paths to variable attribute schema files. These schema files are layered
+        on top of one another in a latest-priority ordering. That is, the latest file that modifies
+        a common schema attribute will take precedence over earlier values for a given attribute.
+    use_defaults: `Optional[bool]`
+        Whether or not to load the default global and variable attribute schema files. These
+        default schema files contain only the requirements for CDF ISTP validation.
 
-    Attributes
-    ----------
-    source_dir : pathlib.Path
-        The directory containing the schema and variable files - nominally config/
+    Examples
+    --------
+    >>> from swxschema.schema import SWxSchema
+    >>> schema = SWxSchema(use_defaults=True)
+    >>> # Get Information about the CATDESC Attriube
+    >>> my_info = schema.measurement_attribute_info(attribute_name="CATDESC")
+    >>> # Get the template for required global attributes
+    >>> global_template = schema.global_attribute_template()
     """
 
-    def __init__(self, data_dir: Path):
-        """Initialize the CdfAttributeManager and read schemas from data_dir."""
-        # TODO: Split up schema source and data source?
-        self.source_dir = data_dir
+    def __init__(
+        self,
+        global_schema_layers: Optional[list[Path]] = None,
+        variable_schema_layers: Optional[list[Path]] = None,
+        use_defaults: Optional[bool] = True,
+    ):
+        super().__init__()
 
-        # TODO: copied from hermes_core. Currently we can use default schema, but
-        # We should add some way of extending the schema and remove all the HERMES
-        # specific stuff
-        # Data Validation, Complaiance,
-        self.global_attribute_schema = self._load_default_global_attr_schema()
+        # Input Validation
+        if not use_defaults and (
+            global_schema_layers is None
+            or variable_schema_layers is None
+            or len(global_schema_layers) == 0
+            or len(variable_schema_layers) == 0
+        ):
+            raise ValueError(
+                "Not enough information to create schema. You must either use the defaults or provide alternative layers for both global and variable attribbute schemas."
+            )
+
+        # Construct the Global Attribute Schema
+        _global_attr_schema = {}
+        if use_defaults:
+            _def_global_attr_schema = self._load_default_global_attr_schema()
+            _global_attr_schema = self._merge(
+                base_layer=_global_attr_schema, new_layer=_def_global_attr_schema
+            )
+        if global_schema_layers is not None:
+            for schema_layer_path in global_schema_layers:
+                _global_attr_layer = self._load_yaml_data(
+                    yaml_file_path=schema_layer_path
+                )
+                _global_attr_schema = self._merge(
+                    base_layer=_global_attr_schema, new_layer=_global_attr_layer
+                )
+        # Set Final Member
+        self._global_attr_schema = _global_attr_schema
 
         # Data Validation and Compliance for Variable Data
-        self.variable_attribute_schema = self._load_default_variable_attr_schema()
-
-        # Load Default IMAP Global Attributes
-        self._global_attributes = CdfAttributeManager._load_yaml_data(
-            self.source_dir / DEFAULT_GLOBAL_CDF_ATTRS_FILE
-        )
-        self._variable_attributes: dict = {}
-
-    def _load_default_global_attr_schema(self) -> yaml:
-        """
-        Load the default global schema from the source directory.
-
-        Returns
-        -------
-        dict
-            The dict representing the global schema.
-        """
-        default_schema_path = (
-            self.source_dir / "shared" / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
-        )
-        # Load the Schema
-        return CdfAttributeManager._load_yaml_data(default_schema_path)
-
-    def _load_default_variable_attr_schema(self) -> yaml:
-        """
-        Load the default variable schema from the source directory.
-
-        Returns
-        -------
-        dict
-            The dict representing the variable schema.
-        """
-        default_schema_path = (
-            self.source_dir / "shared" / DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE
-        )
-        # Load the Schema
-        return CdfAttributeManager._load_yaml_data(default_schema_path)
-
-    # TODO Change Returning Any from function declared to return "dict[Any, Any]"
-
-    def load_global_attributes(self, file_path: str) -> None:
-        """
-        Update the global attributes property with the attributes from the file.
-
-        Calling this method multiple times on different files will add all the
-        attributes from the files, overwriting existing attributes if they are
-        duplicated.
-
-        Parameters
-        ----------
-        file_path : str
-            File path to load, under self.source_dir.
-        """
-        self._global_attributes.update(
-            CdfAttributeManager._load_yaml_data(self.source_dir / file_path)
-        )
-
-    def add_global_attribute(self, attribute_name: str, attribute_value: str) -> None:
-        """
-        Add a single global attribute to the global attributes.
-
-        This is intended only for dynamic global attributes which change per-file, such
-        as Data_version. It is not intended to be used for static attributes, which
-        should all be included in the YAML files.
-
-        This will overwrite any existing value in attribute_name if it exists. The
-        attribute must be in the global schema, or it will not be included as output.
-
-        Parameters
-        ----------
-        attribute_name : str
-            The name of the attribute to add.
-        attribute_value : str
-            The value of the attribute to add.
-        """
-        self._global_attributes[attribute_name] = attribute_value
-
-    @staticmethod
-    def _load_yaml_data(file_path: str | Path) -> yaml:
-        """
-        Load a yaml file from the provided path.
-
-        Parameters
-        ----------
-        file_path : str | Path
-            Path to the yaml file to load.
-
-        Returns
-        -------
-        yaml
-            Loaded yaml.
-        """
-        with open(file_path) as file:
-            return yaml.safe_load(file)
-
-    def get_global_attributes(self, instrument_id: str | None = None) -> dict:
-        """
-        Generate a dictionary global attributes based off the loaded schema and attrs.
-
-        Validates against the global schema to ensure all required variables are
-        present. It can also include instrument specific global attributes if
-        instrumet_id is set.
-
-        If an instrument_id is provided, the level and instrument specific
-        attributes that were previously loaded using add_instrument_global_attrs will
-        be included.
-
-        Parameters
-        ----------
-        instrument_id : str
-            The id of the CDF file, used to retrieve instrument and level
-            specific global attributes. Suggested value is the logical_source_id.
-
-        Returns
-        -------
-        output : dict
-            The global attribute values created from the input global attribute files
-            and schemas.
-        """
-        output = dict()
-        for attr_name, attr_schema in self.global_attribute_schema.items():
-            if attr_name in self._global_attributes:
-                output[attr_name] = self._global_attributes[attr_name]
-            # Retrieve instrument specific global attributes from the variable file
-            elif (
-                instrument_id is not None
-                and attr_name in self._global_attributes[instrument_id]
-            ):
-                output[attr_name] = self._global_attributes[instrument_id][attr_name]
-            elif attr_schema["required"] and attr_name not in self._global_attributes:
-                # TODO throw an error
-                output[attr_name] = None
-
-        return output
-
-    def load_variable_attributes(self, file_name: str) -> None:
-        """
-        Add variable attributes for a given filename.
-
-        Parameters
-        ----------
-        file_name : str
-            The name of the file to load from self.source_dir.
-        """
-        # Add variable attributes from file_name. Each variable name should have the
-        # Required subfields as defined in the variable schema.
-        raw_var_attrs = CdfAttributeManager._load_yaml_data(self.source_dir / file_name)
-        var_attrs = raw_var_attrs.copy()
-
-        self._variable_attributes.update(var_attrs)
-
-    def get_variable_attributes(
-        self, variable_name: str, check_schema: bool = True
-    ) -> dict:
-        """
-        Get the attributes for a given variable name.
-
-        It retrieves the variable from previously loaded variable definition files and
-        validates against the defined variable schemas.
-
-        Parameters
-        ----------
-        variable_name : str
-            The name of the variable to retrieve attributes for.
-
-        check_schema : bool
-            Flag to bypass schema validation.
-
-        Returns
-        -------
-        dict
-            Information containing specific variable attributes
-            associated with "variable_name".
-        """
-        # Case to handle attributes not in schema
-        if check_schema is False:
-            if variable_name in self._variable_attributes:
-                return_dict: dict = self._variable_attributes[variable_name]
-                return return_dict
-            # TODO: throw an error?
-            return {}
-
-        output = dict()
-        for attr_name in self.variable_attribute_schema["attribute_key"]:
-            # Standard case
-            if attr_name in self._variable_attributes[variable_name]:
-                output[attr_name] = self._variable_attributes[variable_name][attr_name]
-            # Case to handle DEPEND_i schema issues
-            elif attr_name == "DEPEND_i":
-                # DEFAULT_0 is not required, UNLESS we are dealing with
-                # variable_name = epoch
-                # Find all the attributes of variable_name that contain "DEPEND"
-                variable_depend_attrs = [
-                    key
-                    for key in self._variable_attributes[variable_name].keys()
-                    if "DEPEND" in key
-                ]
-                # Confirm that each DEPEND_i attribute is unique
-                if len(set(variable_depend_attrs)) != len(variable_depend_attrs):
-                    logging.warning(
-                        f"Found duplicate DEPEND_i attribute in variable "
-                        f"{variable_name}: {variable_depend_attrs}"
-                    )
-                for variable_depend_attr in variable_depend_attrs:
-                    output[variable_depend_attr] = self._variable_attributes[
-                        variable_name
-                    ][variable_depend_attr]
-                # TODO: Add more DEPEND_0 variable checks!
-            # Case to handle LABL_PTR_i schema issues
-            elif attr_name == "LABL_PTR_i":
-                # Find all the attributes of variable_name that contain "LABL_PTR"
-                variable_labl_attrs = [
-                    key
-                    for key in self._variable_attributes[variable_name].keys()
-                    if "LABL_PTR" in key
-                ]
-                for variable_labl_attr in variable_labl_attrs:
-                    output[variable_labl_attr] = self._variable_attributes[
-                        variable_name
-                    ][variable_labl_attr]
-            # Case to handle REPRESENTATION_i schema issues
-            elif attr_name == "REPRESENTATION_i":
-                # Find all the attributes of variable_name that contain
-                # "REPRESENTATION_i"
-                variable_rep_attrs = [
-                    key
-                    for key in self._variable_attributes[variable_name].keys()
-                    if "REPRESENTATION" in key
-                ]
-                for variable_rep_attr in variable_rep_attrs:
-                    output[variable_rep_attr] = self._variable_attributes[
-                        variable_name
-                    ][variable_rep_attr]
-            # Validating required schema
-            elif (
-                self.variable_attribute_schema["attribute_key"][attr_name]["required"]
-                and attr_name not in self._variable_attributes[variable_name]
-            ):
-                logging.warning(
-                    "Required schema '"
-                    + attr_name
-                    + "' attribute not present for "
-                    + variable_name
+        _variable_attr_schema = {}
+        if use_defaults:
+            _def_variable_attr_schema = self._load_default_variable_attr_schema()
+            _variable_attr_schema = self._merge(
+                base_layer=_variable_attr_schema, new_layer=_def_variable_attr_schema
+            )
+        if variable_schema_layers is not None:
+            for schema_layer_path in variable_schema_layers:
+                _variable_attr_layer = self._load_yaml_data(
+                    yaml_file_path=schema_layer_path
                 )
-                output[attr_name] = ""
+                _variable_attr_schema = self._merge(
+                    base_layer=_variable_attr_schema, new_layer=_variable_attr_layer
+                )
+        # Set the Final Member
+        self._variable_attr_schema = _variable_attr_schema
 
-        return output
+        # Load Default Global Attributes
+        self._default_global_attributes = self._load_default_attributes()
+
+    @property
+    def global_attribute_schema(self):
+        """(`dict`) Schema for variable attributes of the file."""
+        return self._global_attr_schema
+
+    @property
+    def variable_attribute_schema(self):
+        """(`dict`) Schema for variable attributes of the file."""
+        return self._variable_attr_schema
+
+    @property
+    def default_global_attributes(self):
+        """(`dict`) Default Global Attributes applied for all SWxSOC Data Files"""
+        return self._default_global_attributes
+
+    def _load_default_global_attr_schema(self) -> dict:
+        # The Default Schema file is contained in theschema/data` directory
+        default_schema_path = str(
+            Path(swxschema.__file__).parent
+            / "data"
+            / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
+        )
+        # Load the Schema
+        return self._load_yaml_data(yaml_file_path=default_schema_path)
+
+    def _load_default_variable_attr_schema(self) -> dict:
+        # The Default Schema file is contained in the `swxschema/data` directory
+        default_schema_path = str(
+            Path(swxschema.__file__).parent
+            / "data"
+            / DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE
+        )
+        # Load the Schema
+        return self._load_yaml_data(yaml_file_path=default_schema_path)
+
+    def _load_default_attributes(self) -> dict:
+        # Use the Existing Global Schema
+        global_schema = self.global_attribute_schema
+        return {
+            attr_name: info["default"]
+            for attr_name, info in global_schema.items()
+            if info["default"] is not None
+        }
+
+    def _load_yaml_data(self, yaml_file_path: Path) -> dict:
+        """
+        Function to load data from a Yaml file.
+
+        Parameters
+        ----------
+        yaml_file_path: `Path`
+            Path to schema file to be used for formatting.
+
+        """
+        assert Path(yaml_file_path).exists()
+        # Load the Yaml file to Dict
+        yaml_data = {}
+        with open(yaml_file_path, "r") as f:
+            yaml_data = yaml.safe_load(f)
+        return yaml_data
+
+    def global_attribute_template(self) -> OrderedDict:
+        """
+        Function to generate a template of required global attributes
+        that must be set for a valid data file.
+
+        Returns
+        -------
+        template : `OrderedDict`
+            A template for required global attributes that must be provided.
+        """
+        template = OrderedDict()
+        for attr_name, attr_schema in self.global_attribute_schema.items():
+            if (
+                attr_schema["required"]
+                and attr_name not in self.default_global_attributes
+            ):
+                template[attr_name] = None
+        return template
+
+    def measurement_attribute_template(self) -> OrderedDict:
+        """
+        Function to generate a template of required measurement attributes
+        that must be set for a valid data file.
+
+        Returns
+        -------
+        template: `OrderedDict`
+            A template for required variable attributes that must be provided.
+        """
+        template = OrderedDict()
+        for attr_name, attr_schema in self.variable_attribute_schema[
+            "attribute_key"
+        ].items():
+            if attr_schema["required"]:
+                template[attr_name] = None
+        return template
+
+    def global_attribute_info(self, attribute_name: Optional[str] = None):
+        """
+        Function to generate a `pd.DataFrame` of information about each global
+        metadata attribute. The `pd.DataFrame` contains all information in the SWxSOC
+        global attribute schema including:
+
+        - description: (`str`) A brief description of the attribute
+        - default: (`str`) The default value used if none is provided
+        - required: (`bool`) Whether the attribute is required by SWxSOC standards
+
+
+        Parameters
+        ----------
+        attribute_name : `str`, optional, default None
+            The name of the attribute to get specific information for.
+
+        Returns
+        -------
+        info: `pd.DataFrame`
+            A table of information about global metadata.
+
+        Raises
+        ------
+        KeyError: If attribute_name is not a recognized global attribute.
+        """
+        import pandas as pd
+
+        # Strip the Description of New Lines
+        for attr_name in self.global_attribute_schema.keys():
+            self.global_attribute_schema[attr_name]["description"] = (
+                self.global_attribute_schema[attr_name]["description"].strip()
+            )
+
+        # Create the Info Table
+        info = pd.DataFrame.from_dict(self.global_attribute_schema, orient="index")
+        # Reset the Index, add Attribute as new column
+        info.reset_index(names="Attribute", inplace=True)
+
+        # Limit the Info to the requested Attribute
+        if attribute_name and attribute_name in info["Attribute"].values:
+            info = info[info["Attribute"] == attribute_name]
+        elif attribute_name and attribute_name not in info["Attribute"].values:
+            raise KeyError(
+                f"Cannot find Global Metadata for attribute name: {attribute_name}"
+            )
+
+        return info
+
+    def measurement_attribute_info(self, attribute_name: Optional[str] = None):
+        """
+        Function to generate a `pd.DataFrame` of information about each variable
+        metadata attribute. The `pd.DataFrame` contains all information in the SWxSOC
+        variable attribute schema including:
+
+        - description: (`str`) A brief description of the attribute
+        - required: (`bool`) Whether the attribute is required by SWxSOC standards
+        - valid_values: (`str`) List of allowed values the attribute can take for SWxSOC products,
+            if applicable
+        - alternate: (`str`) An additional attribute name that can be treated as an alternative
+            of the given attribute. Not all attributes have an alternative and only one of a given
+            attribute or its alternate are required.
+        - var_types: (`str`) A list of the variable types that require the given
+            attribute to be present.
+
+        Parameters
+        ----------
+        attribute_name : `str`, optional, default None
+            The name of the attribute to get specific information for.
+
+        Returns
+        -------
+        info: `pd.DataFrame`
+            A table of information about variable metadata.
+
+        Raises
+        ------
+        KeyError: If attribute_name is not a recognized variable attribute.
+        """
+        import pandas as pd
+
+        measurement_attribute_key = self.variable_attribute_schema["attribute_key"]
+
+        # Strip the Description of New Lines
+        for attr_name in measurement_attribute_key.keys():
+            measurement_attribute_key[attr_name]["description"] = (
+                measurement_attribute_key[attr_name]["description"].strip()
+            )
+
+        # Create New Column to describe which VAR_TYPE's require the given attribute
+        for attr_name in measurement_attribute_key.keys():
+            # Create a new list to store the var types
+            measurement_attribute_key[attr_name]["var_types"] = []
+            for var_type in ["data", "support_data", "metadata"]:
+                # If the attribute is required for the given var type
+                if attr_name in self.variable_attribute_schema[var_type]:
+                    measurement_attribute_key[attr_name]["var_types"].append(var_type)
+            # Convert the list to a string that can be written to a CSV from the table
+            measurement_attribute_key[attr_name]["var_types"] = ", ".join(
+                measurement_attribute_key[attr_name]["var_types"]
+            )
+
+        # Create the Info Table
+        info = pd.DataFrame.from_dict(measurement_attribute_key, orient="index")
+        # Reset the Index, add Attribute as new column
+        info.reset_index(names="Attribute", inplace=True)
+
+        # Limit the Info to the requested Attribute
+        if attribute_name and attribute_name in info["Attribute"].values:
+            info = info[info["Attribute"] == attribute_name]
+        elif attribute_name and attribute_name not in info["Attribute"].values:
+            raise KeyError(
+                f"Cannot find Variable Metadata for attribute name: {attribute_name}"
+            )
+
+        return info
+
+    def _merge(self, base_layer: dict, new_layer: dict, path: list = None):
+        # If we are at the top of the recursion, and we don't have a path, create a new one
+        if not path:
+            path = []
+        # for each key in the base layer
+        for key in new_layer:
+            # If its a shared key
+            if key in base_layer:
+                # If both are dictionaries
+                if isinstance(base_layer[key], dict) and isinstance(
+                    new_layer[key], dict
+                ):
+                    # Merge the two nested dictionaries together
+                    self._merge(base_layer[key], new_layer[key], path + [str(key)])
+                # If both are lists
+                if isinstance(base_layer[key], list) and isinstance(
+                    new_layer[key], list
+                ):
+                    # Extend the list of the base layer by the new layer
+                    base_layer[key].extend(new_layer[key])
+                # If they are not lists or dicts (scalars)
+                elif base_layer[key] != new_layer[key]:
+                    # We've reached a conflict, may want to overwrite the base with the new layer.
+                    base_layer[key] = new_layer[key]
+            # If its not a shared key
+            else:
+                base_layer[key] = new_layer[key]
+        return base_layer
