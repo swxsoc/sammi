@@ -9,16 +9,16 @@ import os
 import sys
 import pandas as pd
 
+# The full version, including alpha/beta/rc tags
+from sammi import __version__
+from sammi.schema import SWxSchema
+
 sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
-project = "swxschema"
+project = "sammi"
 copyright = "No rights reserved"
 author = "SWxSOC Team"
-
-# The full version, including alpha/beta/rc tags
-from swxschema import __version__
-from swxschema.schema import SWxSchema
 
 version = __version__
 
