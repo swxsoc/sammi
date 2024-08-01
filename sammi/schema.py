@@ -8,12 +8,12 @@ from collections import OrderedDict
 from typing import Optional
 import yaml
 
-import swxschema
+import sammi
 
 __all__ = ["SWxSchema"]
 
-DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE = "swxsoc_default_global_cdf_attrs_schema.yaml"
-DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE = "swxsoc_default_variable_cdf_attrs_schema.yaml"
+DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE = "default_global_cdf_attrs_schema.yaml"
+DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE = "default_variable_cdf_attrs_schema.yaml"
 
 
 class SWxSchema:
@@ -72,14 +72,6 @@ class SWxSchema:
         Whether or not to load the default global and variable attribute schema files. These
         default schema files contain only the requirements for CDF ISTP validation.
 
-    Examples
-    --------
-    >>> from swxschema.schema import SWxSchema
-    >>> schema = SWxSchema(use_defaults=True)
-    >>> # Get Information about the CATDESC Attriube
-    >>> my_info = schema.measurement_attribute_info(attribute_name="CATDESC")
-    >>> # Get the template for required global attributes
-    >>> global_template = schema.global_attribute_template()
     """
 
     def __init__(
@@ -158,8 +150,9 @@ class SWxSchema:
     def _load_default_global_attr_schema(self) -> dict:
         # The Default Schema file is contained in theschema/data` directory
         default_schema_path = str(
-            Path(swxschema.__file__).parent
+            Path(sammi.__file__).parent
             / "data"
+            / "shared"
             / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
         )
         # Load the Schema
@@ -168,8 +161,9 @@ class SWxSchema:
     def _load_default_variable_attr_schema(self) -> dict:
         # The Default Schema file is contained in the `swxschema/data` directory
         default_schema_path = str(
-            Path(swxschema.__file__).parent
+            Path(sammi.__file__).parent
             / "data"
+            / "shared"
             / DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE
         )
         # Load the Schema
@@ -267,9 +261,9 @@ class SWxSchema:
 
         # Strip the Description of New Lines
         for attr_name in self.global_attribute_schema.keys():
-            self.global_attribute_schema[attr_name]["description"] = (
-                self.global_attribute_schema[attr_name]["description"].strip()
-            )
+            self.global_attribute_schema[attr_name][
+                "description"
+            ] = self.global_attribute_schema[attr_name]["description"].strip()
 
         # Create the Info Table
         info = pd.DataFrame.from_dict(self.global_attribute_schema, orient="index")
@@ -322,9 +316,9 @@ class SWxSchema:
 
         # Strip the Description of New Lines
         for attr_name in measurement_attribute_key.keys():
-            measurement_attribute_key[attr_name]["description"] = (
-                measurement_attribute_key[attr_name]["description"].strip()
-            )
+            measurement_attribute_key[attr_name][
+                "description"
+            ] = measurement_attribute_key[attr_name]["description"].strip()
 
         # Create New Column to describe which VAR_TYPE's require the given attribute
         for attr_name in measurement_attribute_key.keys():

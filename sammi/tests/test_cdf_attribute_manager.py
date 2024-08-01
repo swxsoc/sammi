@@ -111,7 +111,7 @@ def test_get_global_attributes(cdf_manager):
         get_global_attributes
     """
     # Change filepath to load test global attributes
-    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
@@ -161,7 +161,7 @@ def test_get_global_attributes(cdf_manager):
 
 def test_instrument_id_format(cdf_manager):
     # Change filepath to load test global attributes
-    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
@@ -188,7 +188,7 @@ def test_instrument_id_format(cdf_manager):
 
 def test_add_global_attribute(cdf_manager):
     # Change filepath to load test global attributes
-    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
     # Changing a dynamic global variable
@@ -228,7 +228,7 @@ def test_variable_attribute(cdf_manager):
         get_variable_attributes
     """
 
-    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     # Loading in test data
     cdf_manager.load_variable_attributes("imap_test_variable.yaml")
@@ -273,7 +273,7 @@ def test_variable_attribute(cdf_manager):
 
 def test_get_variable_attributes(cdf_manager):
     # Change filepath to load test global attributes
-    cdf_manager.source_dir =  Path(__file__).parent / "test_data"
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
     cdf_manager.load_variable_attributes("imap_test_variable.yaml")
 
