@@ -9,7 +9,7 @@ name = "sammi"
 description = "A Python package to support metadata attriubte management for Space Weather data processing pipelines."
 readme = "README.rst"
 dynamic = ["version"]
-authors = [{name = "Andrew Robbertz", email="a.robbertz@gmail.com"}]
+authors = [{name = "Andrew Robbertz", email="a.robbertz@gmail.com"}, {name = "IMAP SDC Developers", email="imap.sdc@lists.lasp.colorado.edu"}]
 license = {file = "LICENSE.rst"}
 requires-python = ">=3.9"
 keywords = ["sammi", "nasa mission", "space weather"]
