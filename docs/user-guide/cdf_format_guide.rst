@@ -132,7 +132,7 @@ For each attribute the following information is provided:
 * default: (`str`) The default value used if none is provided
 * required: (`bool`) Whether the attribute is required by ISTP standards
 
-Note that this table is derived from :file:`sammi/data/shared/default_global_cdf_attrs_schema.yaml`
+Note that this table is derived from :file:`sammi/data/default_global_cdf_attrs_schema.yaml`
 
 .. csv-table:: Table 3-1: Required Global Attributes
    :file: ../generated/global_attributes.csv
@@ -406,7 +406,7 @@ For each attribute the following information is provided:
 * var_types: (`str`) A list of the variable types that require the given
   attribute to be present.
 
-Note that this table is derived from :file:`sammi/data/shared/default_variable_cdf_attrs_schema.yaml`
+Note that this table is derived from :file:`sammi/data/default_variable_cdf_attrs_schema.yaml`
 
 .. csv-table:: Table 4-4 SWxSOC Variable Attribute Schema
    :file: ../generated/variable_attributes.csv
