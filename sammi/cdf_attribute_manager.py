@@ -11,7 +11,6 @@ from pathlib import Path
 
 import yaml
 
-DEFAULT_GLOBAL_CDF_ATTRS_FILE = "imap_default_global_cdf_attrs.yaml"
 DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE = "default_global_cdf_attrs_schema.yaml"
 DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE = "default_variable_cdf_attrs_schema.yaml"
 
@@ -75,11 +74,8 @@ class CdfAttributeManager:
         # Data Validation and Compliance for Variable Data
         self.variable_attribute_schema = self._load_default_variable_attr_schema()
 
-        # Load Default IMAP Global Attributes
-        self._global_attributes = CdfAttributeManager._load_yaml_data(
-            self.source_dir / DEFAULT_GLOBAL_CDF_ATTRS_FILE
-        )
         self._variable_attributes: dict = {}
+        self._global_attributes: dict = {}
 
     def _load_default_global_attr_schema(self) -> yaml:
         """
@@ -90,9 +86,7 @@ class CdfAttributeManager:
         dict
             The dict representing the global schema.
         """
-        default_schema_path = (
-            self.source_dir / "shared" / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
-        )
+        default_schema_path = self.source_dir / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
         # Load the Schema
         return CdfAttributeManager._load_yaml_data(default_schema_path)
 
@@ -105,9 +99,7 @@ class CdfAttributeManager:
         dict
             The dict representing the variable schema.
         """
-        default_schema_path = (
-            self.source_dir / "shared" / DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE
-        )
+        default_schema_path = self.source_dir / DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE
         # Load the Schema
         return CdfAttributeManager._load_yaml_data(default_schema_path)
 

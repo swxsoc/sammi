@@ -8,7 +8,8 @@ from sammi.cdf_attribute_manager import CdfAttributeManager
 @pytest.fixture()
 def cdf_manager():
     """Initialize CdfAttributeManager with default properties."""
-    return CdfAttributeManager(Path(__file__).parent.parent / "data")
+    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "data")
+    return cdf_manager
 
 
 def test_default_attr_schema(cdf_manager):
@@ -41,6 +42,7 @@ def test_load_global_attribute(cdf_manager):
         load_global_attributes
     """
 
+    cdf_manager.source_dir = Path(__file__).parent / "test_data"
     # Initialize CdfAttributeManager object which loads in default info
     cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
 
@@ -75,7 +77,7 @@ def test_load_global_attribute(cdf_manager):
 
     # Load in different data
     cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes("default_global_test_cdf_attrs.yaml")
 
     # Testing attributes carried over
     assert (
@@ -112,7 +114,7 @@ def test_get_global_attributes(cdf_manager):
     """
     # Change filepath to load test global attributes
     cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes("default_global_test_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
     # Loading in instrument specific attributes
@@ -161,7 +163,7 @@ def test_get_global_attributes(cdf_manager):
 def test_instrument_id_format(cdf_manager):
     # Change filepath to load test global attributes
     cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
     # Loading in instrument specific attributes
@@ -188,6 +190,7 @@ def test_instrument_id_format(cdf_manager):
 def test_add_global_attribute(cdf_manager):
     # Change filepath to load test global attributes
     cdf_manager.source_dir = Path(__file__).parent / "test_data"
+    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
     cdf_manager.load_global_attributes("imap_test_global.yaml")
 
     # Changing a dynamic global variable
@@ -228,7 +231,7 @@ def test_variable_attribute(cdf_manager):
     """
 
     cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
     # Loading in test data
     cdf_manager.load_variable_attributes("imap_test_variable.yaml")
 
@@ -273,7 +276,7 @@ def test_variable_attribute(cdf_manager):
 def test_get_variable_attributes(cdf_manager):
     # Change filepath to load test global attributes
     cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_test_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
     cdf_manager.load_variable_attributes("imap_test_variable.yaml")
 
     # Loading in instrument specific attributes

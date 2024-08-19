@@ -150,10 +150,7 @@ class SWxSchema:
     def _load_default_global_attr_schema(self) -> dict:
         # The Default Schema file is contained in theschema/data` directory
         default_schema_path = str(
-            Path(sammi.__file__).parent
-            / "data"
-            / "shared"
-            / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
+            Path(sammi.__file__).parent / "data" / DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE
         )
         # Load the Schema
         return self._load_yaml_data(yaml_file_path=default_schema_path)
@@ -163,7 +160,6 @@ class SWxSchema:
         default_schema_path = str(
             Path(sammi.__file__).parent
             / "data"
-            / "shared"
             / DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE
         )
         # Load the Schema
