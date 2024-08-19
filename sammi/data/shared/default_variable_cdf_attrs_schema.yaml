@@ -87,6 +87,85 @@ attribute_key:
     required: true
     valid_values: null
     alternate: null
+  CDELTi:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. This metadata attribte should be
+      used for the i'th dimension (1-based) and reapeated for all WCSAXES dimensions.
+      The value field shall contain a floating point number
+      giving the partial derivative of the coordinate specified by the CTYPEi
+      keywords with respect to the pixel index, evaluated at the reference
+      point CRPIXi, in units of the coordinate specified by  the CTYPEi
+      keyword.
+    required: false
+    valid_values: null
+    alternate: null
+  CNAMEi:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. This metadata attribte should be
+      used for the i'th dimension (1-based) and reapeated for all WCSAXES dimensions.
+      The value shall contain a charachter string represnting the name of the i'th axis.
+      The name is used for comment/documentation purposes only and is not used as a part
+      of the i'th axis coordinate transformations.
+    required: false
+    valid_values: null
+    alternate: null
+  COORDINATE_SYSTEM:
+    description: >
+      All variables for which the values are dependent on the system of coordinates are
+      strongly recommended to have this attribute. This includes both full vectors, tensors, etc.
+      or individual values, e.g. of an angle with respect to some axis. The attribute is a text
+      string which takes the form: "XXX[>optional long name]"
+    required: false
+    valid_values: null
+    alternate: null
+  CTYPEi:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. This metadata attribte should be
+      used for the i'th dimension (1-based) and reapeated for all WCSAXES dimensions.
+      The value field shall contain a character string, giving
+      the name of the coordinate represented by axis i.
+    required: false
+    valid_values: null
+    alternate: null
+  CUNITi:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. This metadata attribte should be
+      used for the i'th dimension (1-based) and reapeated for all WCSAXES dimensions.
+      The value shall be the units along axis i, compatible with CTYPEi to be used for
+      scaling and coordinate transformations along the i'th axis.
+    required: false
+    valid_values: null
+    alternate: null
+  CRPIXi:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. This metadata attribte should be
+      used for the i'th dimension (1-based) and reapeated for all WCSAXES dimensions.
+      The value field shall contain a floating point number,
+      identifying the location of a reference point along axis i, in units of
+      the axis index.  This value is based upon a counter that runs from 1 to
+      NAXISn with an increment of 1 per pixel.  The reference point value
+      need not be that for the center of a pixel nor lie within the actual
+      data array.  Use comments to indicate the location of the index point
+      relative to the pixel.
+    required: false
+    valid_values: null
+    alternate: null
+  CRVALi:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. This metadata attribte should be
+      used for the i'th dimension (1-based) and reapeated for all WCSAXES dimensions.
+      The value field shall contain a floating point number,
+      giving the value of the coordinate specified by the CTYPEn keyword at
+      the reference point CRPIXi.
+    required: false
+    valid_values: null
+    alternate: null
   DELTA_PLUS_VAR:
     description: >
       included to point to a variable (or variables) which stores the uncertainty in (or range of) the original variable's value.
@@ -234,6 +313,15 @@ attribute_key:
     required: false # Optional in ISTP Guide
     valid_values: null
     alternate: null
+  MJDREF:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. The value shall contain a floating
+      point number representing the reference time position of the time stamps along the
+      0'th axis of the measurement.
+    required: false
+    valid_values: null
+    alternate: null
   MONOTON:
     description: >
       Indicates whether the variable is monotonically increasing or monotonically decreasing.
@@ -243,6 +331,24 @@ attribute_key:
     valid_values:
       INCREASE
       DECREASE
+    alternate: null
+  OPERATOR_TYPE:
+    description: >
+      This has been introduced to describe HERMES quaternions (see Section 5.2 below). It
+      has allowed values "UNIT_QUATERNION" or "ROTATION_MATRIX" although other
+      values could be added. Unit quaternions correspond to pure spatial rotations.
+    required: false
+    valid_values: null
+    alternate: null
+  REPRESENTATION_i:
+    description: >
+      This strongly recommended attribute holds the way vector or tensor variables are held,
+      e.g., as Cartesian or polar forms, and their sequence order in the dimension i in which
+      they are held. Cartesians are indicated by x,y,z; polar coordinates by r (magnitude), t
+      (theta - from z-axis), p (phi - longitude or azimuth around z-axis from x axis), l (lambda
+      = latitude). Examples follow.
+    required: false
+    valid_values: null
     alternate: null
   SCALEMIN:
     description: >
@@ -296,6 +402,37 @@ attribute_key:
       Units are defined according to their standard SI symbols (ie. Tesla = T, Newtons = N, Meters = m, etc.)
       For data variables that are inherently unitless, and thus lack a conversion factor, this data attribute will be " > " where ' ' is a blank space and the quotation marks are not included.
       Units which are not conveniently transformed into SI should follow the blank syntax " > " described above.
+    required: false
+    valid_values: null
+    alternate: null
+  TENSOR_ORDER:
+    description: >
+      All variables which hold physical vectors, tensors, etc., or sub-parts thereof, are strongly
+      recommended to have their tensorial properties held by this numerical value. Vectors
+      have TENSOR_ORDER=1, pressure tensors have TENSOR_ORDER=2, etc. Variables
+      which hold single components or sub-parts of a vector or tensor, e.g., the x-component of
+      velocity or the three diagonal elements of a tensor, use this attribute to establish the
+      underlying object from which they are extracted. TENSOR_ORDER is a number, usually
+      held as a CDF_INT4, rather than a character string.
+    required: false
+    valid_values: null
+    alternate: null
+  TIMEDEL:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. The value shall contain a floating
+      point number representing the resolution of the time stamps along the 0'th axis of
+      the measurement. The TIMEDEL should match the CRDELi along the time axis of the
+      measurement.
+    required: false
+    valid_values: null
+    alternate: null
+  TIMEUNIT:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables. The value shall contain a character
+      string giving the units of the time stamps along the 0'th axis of the measurement.
+      The TIMEUNIT should match the CUNITi along the time axis of the measurement
     required: false
     valid_values: null
     alternate: null
@@ -370,6 +507,16 @@ attribute_key:
       The "attached" variable can be dimensional and sized to hold as many parents as necessary.
       The syntax of each entry would be: logical_file_id>variable_name.
     required: false # Optional in ISTP Guide
+    valid_values: null
+    alternate: null
+  WCSAXES:
+    description: >
+      This is a FITS WCS Keyword being repurposed for handling WCS transformations with
+      high-dimensional or spectral CDF data variables.
+      The value field shall contain a non-negative integer no
+      greater than 999, representing the number of axes in the associated
+      data array.
+    required: false
     valid_values: null
     alternate: null
 data:

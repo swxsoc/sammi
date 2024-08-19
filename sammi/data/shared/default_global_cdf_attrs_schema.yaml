@@ -3,7 +3,7 @@ Acknowledgement:
     Text string at PI disposal allowing for information on expected acknowledgment if data is citable.
     Example: "Cite McComas et al (2016),doi:10.1007/s11214-014-0059-1"
   default: null
-  required: fale # Recommended in ISTP Guide
+  required: false # Recommended in ISTP Guide
 Data_level:
   description: >
     This attribute is used in file name creation and records the level of processsing done on the dataset.
@@ -73,6 +73,12 @@ DOI:
     DOIs are typically created by the SPASE naming authority or archive.
   default: null
   required: false # Recommended in ISTP Guide
+File_naming_convention:
+  description: >
+    If File_naming_convention was not set, it uses default setting:
+      source_datatype_descriptor_yyyyMMdd
+  default: source_datatype_descriptor_yyyyMMdd
+  required: false
 Generated_by:
   description: >
     This attribute allows for the generating data center/group to be identified.
@@ -95,6 +101,11 @@ HTTP_LINK:
     - "HTTP_LINK" = https://www.darts.isas.jaxa.jp/stp/geotail/
   default: null
   required: false # Recommended in ISTP Guide
+Instrument_mode: # This may be an IMAP Specific attribute
+  description: >
+    TBS
+  default: null
+  required: false # NOT Required in ISTP Guide (Derived)
 Instrument_type:
   description: >
     This attribute is used to facilitate making choices of instrument type.
@@ -230,6 +241,11 @@ spase_DatasetResourceID:
     Unique dataset identifier assigned by SPASE, of the form spase://<NAMING_AUTHORITY>/<UNIQUE_ID>, where <UNIQUE_ID> is the ID assigned to the SPASE resource record for the dataset in the SPASE system by a SPASE <NAMING_AUTHORITY>. The SPASE resource record provides metadata about the dataset, including pointers to locations holding the data.
   default: null
   required: false # Recommended in ISTP Guide
+Start_time:
+  description: >
+    The start time of the contained data given in YYYYMMDD_hhmmss
+  default: null
+  required: false # NOT Required in ISTP Guide (Derived)
 TEXT:
   description: >
     This attribute is an SPDF standard global attribute, which is a text description of the experiment whose data is included in the CDF.

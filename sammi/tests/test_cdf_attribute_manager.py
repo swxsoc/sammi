@@ -20,7 +20,7 @@ def test_default_attr_schema(cdf_manager):
 
     # Default global tests
     assert cdf_manager.global_attribute_schema["DOI"]["required"] is False
-    assert cdf_manager.global_attribute_schema["Data_level"]["required"] is True
+    assert cdf_manager.global_attribute_schema["Data_type"]["required"] is True
 
     # Default variable tests
     assert (
@@ -30,7 +30,7 @@ def test_default_attr_schema(cdf_manager):
         is False
     )
     assert (
-        cdf_manager.variable_attribute_schema["attribute_key"]["RESOLUTION"]["required"]
+        cdf_manager.variable_attribute_schema["attribute_key"]["CATDESC"]["required"]
         is True
     )
 
@@ -134,14 +134,13 @@ def test_get_global_attributes(cdf_manager):
         == "IMAP Mission TEST one document Level-T1."
     )
     # Not given, and not required information
-    assert test_get_global_attrs["Data_level"] is None
     with pytest.raises(KeyError):
         assert test_get_global_attrs["bad_name"] == "false info"
 
     # Testing second elif statement
     test_error_elif = cdf_manager.get_global_attributes("imap_test_T3_test")
     with pytest.raises(KeyError):
-        assert test_error_elif["Data_type"] == "Does Not Exist"
+        assert test_error_elif["Generation_date"] == "Does Not Exist"
 
     # Load in more data using get_global_attributes
     test_get_global_attrs_2 = cdf_manager.get_global_attributes("imap_test_T2_test")
@@ -326,8 +325,7 @@ def test_get_variable_attributes(cdf_manager):
     imap_test_variable_3 = cdf_manager.get_variable_attributes("test_field_3")
 
     assert imap_test_variable_3["DEPEND_1"] == "depend_1_test_3"
-    with pytest.raises(KeyError):
-        assert imap_test_variable_3["DEPEND_0"]
+    assert imap_test_variable_3["DEPEND_0"] == ""
     assert imap_test_variable_3["CATDESC"] == ""
     assert imap_test_variable_3["REPRESENTATION_2"] == "representation_2"
     assert imap_test_variable_3["LABL_PTR_1"] == "labl_ptr_1"
