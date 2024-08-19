@@ -136,7 +136,7 @@ Note that this table is derived from :file:`sammi/data/shared/default_global_cdf
 
 .. csv-table:: Table 3-1: Required Global Attributes
    :file: ../generated/global_attributes.csv
-   :widths: 30, 70, 30, 30, 30, 30
+   :widths: 30, 70, 30, 30
    :header-rows: 1
 
 --------------------------------------
