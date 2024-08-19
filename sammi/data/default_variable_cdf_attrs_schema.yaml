@@ -1,5 +1,5 @@
 # Based on :  https://spdf.gsfc.nasa.gov/istp_guide/vattributes.html
-#             SWxSOC CDF Format Guide
+#             SAMMI / DEFAULT ISTP CDF Format Guide
 attribute_key:
   # ===== EPOCH-ONLY VARIABLE ATTRIBUTES =====
   TIME_BASE:
