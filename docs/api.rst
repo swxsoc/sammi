@@ -6,5 +6,5 @@ API Reference
 
 .. automodapi:: sammi
    :no-inheritance-diagram:
-.. automodapi:: sammi.schema
+.. automodapi:: sammi.cdf_attribute_manager
    :no-inheritance-diagram:

@@ -1,38 +1,38 @@
-.. _schema_information_guide:
+.. cdf_attribute_management:
 
 ***********************************************************
-Using SWxSOC Schema for Metadata Attributes
+Using SAMMI CDF Attribute Manager for Metadata Attributes
 ***********************************************************
 
 Overview
 ========
 
-The :py:class:`~swxschema.schema.SWxSchema` class provides an interface to configure how metadata attributes are formatted in SWxSOC affiliated data products. 
+The :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` class provides an interface to configure how metadata attributes are formatted in SWxSOC affiliated data products. 
 The class represents a schema for metadata attribute requirements, validation, and formatting. 
 
-It is important to understand the configuration options of :py:class:`~swxschema.schema.SWxSchema` objects in order to attain the desired behavior of metadata attributes. 
+It is important to understand the configuration options of :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` objects in order to attain the desired behavior of metadata attributes. 
 
-The :py:class:`~swxschema.schema.SWxSchema` class has two main attributes.
-The class contains a :py:attr:`~swxschema.schema.SWxSchema.global_attribute_schema` member which configures global, or file level, metadata attributes. 
-Second, the class contains a  :py:attr:`~swxschema.schema.SWxSchema.variable_attribute_schema` member which configures variable or measurement level metadata attributes. 
+The :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` class has two main attributes.
+The class contains a :py:attr:`~sammi.cdf_attribute_manager.CdfAttributeManager.global_attribute_schema` member which configures global, or file level, metadata attributes. 
+Second, the class contains a  :py:attr:`~sammi.cdf_attribute_manager.CdfAttributeManager.variable_attribute_schema` member which configures variable or measurement level metadata attributes. 
 This guide contains two sections detailing the format of each of these class members, how they're used, and how you can extend or modify them to meet your specific needs. 
 
 Each of the global and variable schemas are loaded from YAML (dict-like) files which can be combined to layer multiple schema elements into a single unified schema. 
 This allows extensions and overrides to the default schema, and allows you to create new schema configurations for specific archive file types and specific metadata requirements.
 
-Creating a SWxSOC Schema
-========================
+Creating a CDF Attribute Manager
+================================
 
-Creating a :py:class:`~swxschema.schema.SWxSchema` object directly includes passing one or more paths to schema files to layer on top of one another, and optionally whether to use the default base layer schema files. 
+Creating a :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` object directly includes passing one or more paths to schema files to layer on top of one another, and optionally whether to use the default base layer schema files. 
 For more information on the default, base layer, schema files please see our :doc:`CDF Format Guide </user-guide/cdf_format_guide>`.
 
-Here is an example of instantiation of a :py:class:`~swxschema.schema.SWxSchema` object: 
+Here is an example of instantiation of a :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` object: 
 
 .. code-block:: python
 
     global_layers = ["my_global_layer_1.yaml", "my_global_layer_2.yaml"]
     variable_layers = ["my_variable_layer_1.yaml", "my_variable_layer_2.yaml"]
-    my_schema = SWXSchema(
+    my_schema = CdfAttributeManager(
         global_schema_layers=global_layers,
         variable_schema_layers=variable_layers,
         use_defaults=False
@@ -47,7 +47,7 @@ Global Attribute Schemas
 ========================
 
 Global metadata attribute schemas are used to define requirements at the global or file level. 
-The global attribute schema is configured through YAML files, with the default configuration in :file:`swxsoc/data/swxsoc_default_global_cdf_attrs_schema.yaml`
+The global attribute schema is configured through YAML files, with the default configuration in :file:`sammi/data/default_global_cdf_attrs_schema.yaml`
 
 The YAML file represents a dictionary of attribute information, keyed by the metadata attribute name. 
 Information on the file format can be seen below:
@@ -94,7 +94,7 @@ Variable Attribute Schemas
 ==========================
 
 Variable metadata attribute schemas are used to define requirements at the variable or measurement level. 
-The variable attribute schema is configured through YAML files, with the default configuration in file :file:`swxsoc/data/swxsoc_default_variable_cdf_attrs_schema.yaml`.
+The variable attribute schema is configured through YAML files, with the default configuration in file :file:`sammi/data/default_variable_cdf_attrs_schema.yaml`.
 
 The variable attribute schema YAML file has two main parts.
 

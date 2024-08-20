@@ -11,14 +11,14 @@ import pandas as pd
 
 # The full version, including alpha/beta/rc tags
 from sammi import __version__
-from sammi.schema import SWxSchema
+from sammi.cdf_attribute_manager import CdfAttributeManager
 
 sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
 project = "sammi"
 copyright = "No rights reserved"
-author = "SWxSOC Team"
+author = "SAMMI Team"
 
 version = __version__
 
@@ -50,11 +50,11 @@ if not os.path.exists("generated"):
     os.mkdir("generated")  # generate the directory before putting things in it
 # Global Attributes to CSV
 
-global_info: pd.DataFrame = SWxSchema().global_attribute_info()
+global_info: pd.DataFrame = CdfAttributeManager().global_attribute_info()
 global_info.to_csv("./generated/global_attributes.csv", index=False)
 
 # Variable Attributes to CSV
-variable_info: pd.DataFrame = SWxSchema().measurement_attribute_info()
+variable_info: pd.DataFrame = CdfAttributeManager().variable_attribute_info()
 variable_info.to_csv("./generated/variable_attributes.csv", index=False)
 
 # Add any paths that contain templates here, relative to this directory.

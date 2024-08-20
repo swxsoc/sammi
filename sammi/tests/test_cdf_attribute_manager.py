@@ -1,6 +1,10 @@
 from pathlib import Path
+import tempfile
+from collections import OrderedDict
 
 import pytest
+import yaml
+import pandas as pd
 
 from sammi.cdf_attribute_manager import CdfAttributeManager
 
@@ -8,8 +12,25 @@ from sammi.cdf_attribute_manager import CdfAttributeManager
 @pytest.fixture()
 def cdf_manager():
     """Initialize CdfAttributeManager with default properties."""
-    cdf_manager = CdfAttributeManager(Path(__file__).parent.parent / "data")
+    cdf_manager = CdfAttributeManager(use_defaults=True)
     return cdf_manager
+
+
+def test_load_yaml_data():
+    """Test Loading Yaml Data for Schema Files"""
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        # This function writes invalid YAML content into a file
+        invalid_yaml = """
+        name: John Doe
+        age 30
+        """
+
+        with open(tmpdirname + "test.yaml", "w") as file:
+            file.write(invalid_yaml)
+
+        # Load from an non-existant file
+        with pytest.raises(yaml.YAMLError):
+            _ = CdfAttributeManager()._load_yaml_data(tmpdirname + "test.yaml")
 
 
 def test_default_attr_schema(cdf_manager):
@@ -36,15 +57,115 @@ def test_default_attr_schema(cdf_manager):
     )
 
 
+def test_cdf_manager_invalid_params():
+    """Test Creating a Schema with Invalid Parameters"""
+    with pytest.raises(ValueError):
+        _ = CdfAttributeManager(
+            global_schema_layers=None, variable_schema_layers=None, use_defaults=None
+        )
+
+
+def test_cdf_manager_custom_layers():
+    """Test Creating a Schema with Custom Layers"""
+    with tempfile.TemporaryDirectory() as tmpdirname:
+
+        # Create Extra Global Layer for Testing
+        global_layer_content = """
+        test_attribute:
+            description: This is a test attribute
+            default: null
+            required: true
+        Data_type:
+            description: >
+                This attribute is used by CDF file writing software to create a filename.
+            default: null
+            required: true   # NOT originally required in Default Schema
+        """
+
+        global_test_path = Path(tmpdirname) / "global_test.yaml"
+        with open(global_test_path, "w") as file:
+            file.write(global_layer_content)
+        assert global_test_path.is_file()
+
+        # Create Extra Variable Layer for Testing
+        variable_layer_content = """
+        attribute_key:
+            test_attribute:
+                description: This is a test attribute
+                required: true
+                valid_values: null
+                alternate: null
+            SI_CONVERSION:
+                description: The conversion factor to SI units.
+                required: true  # NOT originally required in Default Schema
+                valid_values: null
+                alternate: null
+        data:
+            - test_attribute
+            - SI_CONVERSION
+        support_data:
+            - test_attribute
+            - SI_CONVERSION
+        metadata:
+            - test_attribute
+        """
+
+        variable_test_path = Path(tmpdirname) / "variable_test.yaml"
+        with open(variable_test_path, "w") as file:
+            file.write(variable_layer_content)
+        assert variable_test_path.is_file()
+
+        cdf_manager = CdfAttributeManager(
+            global_schema_layers=[global_test_path],
+            variable_schema_layers=[variable_test_path],
+            use_defaults=True,
+        )
+
+        assert cdf_manager.global_attribute_schema is not None
+        # Assert Test Attribute is Added to the Global Schema
+        assert "test_attribute" in cdf_manager.global_attribute_schema
+        assert cdf_manager.global_attribute_schema["test_attribute"]["required"]
+        # Assert Data_type is Overwritten in Global Schema
+        assert "Data_type" in cdf_manager.global_attribute_schema
+        assert cdf_manager.global_attribute_schema["Data_type"]["required"]
+
+        assert cdf_manager.variable_attribute_schema is not None
+        # Assert Test Attribute is Added to the Variable Schema
+        assert (
+            "test_attribute" in cdf_manager.variable_attribute_schema["attribute_key"]
+        )
+        assert cdf_manager.variable_attribute_schema["attribute_key"]["test_attribute"][
+            "required"
+        ]
+        # Assert SI_CONVERSION is Overwritten in Variable Schema
+        assert "SI_CONVERSION" in cdf_manager.variable_attribute_schema["attribute_key"]
+        assert cdf_manager.variable_attribute_schema["attribute_key"]["SI_CONVERSION"][
+            "required"
+        ]
+
+        # Assert Var Type Lists are Updated
+        assert len(cdf_manager.variable_attribute_schema["data"]) > 2
+        assert len(cdf_manager.variable_attribute_schema["support_data"]) > 2
+        assert len(cdf_manager.variable_attribute_schema["metadata"]) > 1
+        assert "test_attribute" in cdf_manager.variable_attribute_schema["data"]
+        assert "test_attribute" in cdf_manager.variable_attribute_schema["support_data"]
+        assert "test_attribute" in cdf_manager.variable_attribute_schema["metadata"]
+        assert "SI_CONVERSION" in cdf_manager.variable_attribute_schema["data"]
+        assert "SI_CONVERSION" in cdf_manager.variable_attribute_schema["support_data"]
+        assert "SI_CONVERSION" not in cdf_manager.variable_attribute_schema["metadata"]
+
+
 def test_load_global_attribute(cdf_manager):
     """
     Test function that covers:
         load_global_attributes
     """
 
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
+    test_data_dir = Path(__file__).parent / "test_data"
     # Initialize CdfAttributeManager object which loads in default info
-    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes(
+        test_data_dir / "imap_default_global_cdf_attrs.yaml"
+    )
 
     # Testing information has been loaded in
     assert cdf_manager._global_attributes["Project"] == "STP>Solar-Terrestrial Physics"
@@ -76,8 +197,9 @@ def test_load_global_attribute(cdf_manager):
         assert cdf_manager._global_attributes["DOI"] == "test"
 
     # Load in different data
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("default_global_test_cdf_attrs.yaml")
+    cdf_manager.load_global_attributes(
+        test_data_dir / "default_global_test_cdf_attrs.yaml"
+    )
 
     # Testing attributes carried over
     assert (
@@ -113,9 +235,11 @@ def test_get_global_attributes(cdf_manager):
         get_global_attributes
     """
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("default_global_test_cdf_attrs.yaml")
-    cdf_manager.load_global_attributes("imap_test_global.yaml")
+    test_data_dir = Path(__file__).parent / "test_data"
+    cdf_manager.load_global_attributes(
+        test_data_dir / "default_global_test_cdf_attrs.yaml"
+    )
+    cdf_manager.load_global_attributes(test_data_dir / "imap_test_global.yaml")
 
     # Loading in instrument specific attributes
     test_get_global_attrs = cdf_manager.get_global_attributes("imap_test_T1_test")
@@ -161,10 +285,16 @@ def test_get_global_attributes(cdf_manager):
 
 
 def test_instrument_id_format(cdf_manager):
+    """
+    Test function that covers:
+        get_global_attributes
+    """
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
-    cdf_manager.load_global_attributes("imap_test_global.yaml")
+    test_data_dir = Path(__file__).parent / "test_data"
+    cdf_manager.load_global_attributes(
+        test_data_dir / "imap_default_global_cdf_attrs.yaml"
+    )
+    cdf_manager.load_global_attributes(test_data_dir / "imap_test_global.yaml")
 
     # Loading in instrument specific attributes
     test_get_global_attrs = cdf_manager.get_global_attributes("imap_test_T1_test")
@@ -188,10 +318,16 @@ def test_instrument_id_format(cdf_manager):
 
 
 def test_add_global_attribute(cdf_manager):
+    """
+    Test function that covers:
+        add_global_attribute
+    """
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
-    cdf_manager.load_global_attributes("imap_test_global.yaml")
+    test_data_dir = Path(__file__).parent / "test_data"
+    cdf_manager.load_global_attributes(
+        test_data_dir / "imap_default_global_cdf_attrs.yaml"
+    )
+    cdf_manager.load_global_attributes(test_data_dir / "imap_test_global.yaml")
 
     # Changing a dynamic global variable
     cdf_manager.add_global_attribute("Project", "Test Project")
@@ -230,10 +366,12 @@ def test_variable_attribute(cdf_manager):
         get_variable_attributes
     """
 
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
+    test_data_dir = Path(__file__).parent / "test_data"
+    cdf_manager.load_global_attributes(
+        test_data_dir / "imap_default_global_cdf_attrs.yaml"
+    )
     # Loading in test data
-    cdf_manager.load_variable_attributes("imap_test_variable.yaml")
+    cdf_manager.load_variable_attributes(test_data_dir / "imap_test_variable.yaml")
 
     # All variables required to have:
     expected_attributes = [
@@ -274,10 +412,18 @@ def test_variable_attribute(cdf_manager):
 
 
 def test_get_variable_attributes(cdf_manager):
+    """
+    Test function that covers:
+        load_variable_attributes
+        get_variable_attributes
+    """
     # Change filepath to load test global attributes
-    cdf_manager.source_dir = Path(__file__).parent / "test_data"
-    cdf_manager.load_global_attributes("imap_default_global_cdf_attrs.yaml")
-    cdf_manager.load_variable_attributes("imap_test_variable.yaml")
+    test_data_dir = Path(__file__).parent / "test_data"
+    cdf_manager.load_global_attributes(
+        test_data_dir / "imap_default_global_cdf_attrs.yaml"
+    )
+    # Loading in test data
+    cdf_manager.load_variable_attributes(test_data_dir / "imap_test_variable.yaml")
 
     # Loading in instrument specific attributes
     imap_test_variable = cdf_manager.get_variable_attributes("test_field_1")
@@ -339,3 +485,37 @@ def test_get_variable_attributes(cdf_manager):
     )
     assert imap_test_variable_1_false["NOT_IN_SCHEMA"] == "not_in_schema"
     assert imap_test_variable_1_false["VALIDMIN"] == 0
+
+
+def test_sw_templates(cdf_manager):
+    """Test Global and Variable Attribute Templates"""
+
+    # Global Attribute Template
+    assert cdf_manager.global_attribute_template() is not None
+    assert isinstance(cdf_manager.global_attribute_template(), OrderedDict)
+
+    # Variable Attribute Template
+    assert cdf_manager.variable_attribute_template() is not None
+    assert isinstance(cdf_manager.variable_attribute_template(), OrderedDict)
+
+
+def test_sw_info(cdf_manager):
+    """Test Global and Variable Attribute Info Functions"""
+
+    # Global Attribute Info
+    assert cdf_manager.global_attribute_info() is not None
+    assert isinstance(cdf_manager.global_attribute_info(), pd.DataFrame)
+    assert isinstance(
+        cdf_manager.global_attribute_info(attribute_name="Descriptor"), pd.DataFrame
+    )
+    with pytest.raises(KeyError):
+        _ = cdf_manager.global_attribute_info(attribute_name="NotAnAttribute")
+
+    # Variable Attribute Info
+    assert cdf_manager.variable_attribute_info() is not None
+    assert isinstance(cdf_manager.variable_attribute_info(), pd.DataFrame)
+    assert isinstance(
+        cdf_manager.variable_attribute_info(attribute_name="CATDESC"), pd.DataFrame
+    )
+    with pytest.raises(KeyError):
+        _ = cdf_manager.variable_attribute_info(attribute_name="NotAnAttribute")
