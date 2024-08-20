@@ -34,7 +34,7 @@ jobs:
         pip install -e .[test]
 
     - name: Run Tests
-      run: pytest --pyargs swxschema --cov swxschema
+      run: pytest --pyargs sammi --cov sammi
       env:
         PLATFORM: ${{ matrix.platform }}
 

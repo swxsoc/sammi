@@ -33,8 +33,8 @@ jobs:
         python -m pip install -e '.[style]'
     - name: Lint with Black
       run: |
-        black --check --diff swxschema
+        black --check --diff sammi
     - name: flake8
       run: |
-        flake8 --count swxschema
+        flake8 --count sammi
 

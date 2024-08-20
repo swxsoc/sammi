@@ -1,0 +1,280 @@
+Acknowledgement:
+  description: >
+    Text string at PI disposal allowing for information on expected acknowledgment if data is citable.
+    Example: "Cite McComas et al (2016),doi:10.1007/s11214-014-0059-1"
+  default: null
+  required: false # Recommended in ISTP Guide
+Data_level:
+  description: >
+    This attribute is used in file name creation and records the level of processsing done on the dataset.
+    Valid values:
+    - l0>Level 0
+    - l1>Level 1
+    - l2>Level 2
+    - l3>Level 3
+    - l4>Level 4
+    - ql>Quicklook
+  default: null
+  required: false # Not listed in ISTP Guide, but recommended by SWxSOC
+Data_product_descriptor:
+  description: >
+    This is an optional field that may not be needed for all products.
+    Where it is used, identifier should be short (e.q. 3-8 characters) descriptors that are helpful to end- users.
+    If a descriptor contains multiple components, underscores are used to separate those components.
+  default: null
+  required: false # Not listed in ISTP Guide, but recommended by SWxSOC
+Data_type:
+  description: >
+    This attribute identifies the data type of the CDF data set.
+    Both a long name and a short name are given.
+    For ISTP exchangeable data products the values are "Kn>Key Parameter" for approximately minute averaged survey data, and "Hn>High Resolution data" for certified data of higher resolution than Key Parameters.
+    Key Parameters can run from 0 to 9 to allow for more than one kind of data product.
+    For Cluster/CSDS this can either be "SP>Summary Parameter" or "PP>Prime Parameter".
+    Other possible data types may be defined in future.
+    If any of these data sets are modified or used to produce derived products, the data type should be, e.g., "Mn>Modified Data n", where n is from 0 to 9.
+    Example: "L2-Summary>level 2 summary"
+  default: null
+  required: true
+Data_version:
+  description: >
+    This attribute identifies the version of a particular CDF data file for a given date, e.g., the file GE_K0_MGF_19920923_V01 is the first version of data for 1992 September 23.
+    Each time this particular data file is reproduced - for recalibration or other reasons - the Data_version is incremented by 1.
+    Data_version always starts at '1'.
+    Example: "07", "v1.0.3"
+  default: null
+  required: true
+Descriptor:
+  description: >
+    This attribute identifies the name of the instrument or sensor that collected the data.
+    Both a long name and a short name are given.
+    An example for ISTP is "EPI>Energetic Particles and Ion Composition".
+    The short name should be limited to from 2 to 4 characters for consistency with ISTP.
+    This attribute should be single valued.
+    For example, from the HERMES mission, the following are valid values:
+    - EEA>Electron Electrostatic Analyzer
+    - MERIT>Miniaturized Electron pRoton Telescope
+    - NEMISIS> Noise Eliminating Magnetometer In a Small Integrated System
+    - SPAN-I>Solar Probe Analyzer for Ions
+  default: null
+  required: true
+Discipline:
+  description: >
+    This attribute describes both the science discipline and sub discipline.
+    The list for space physics is:
+    - "Space Physics>Magnetospheric Science",
+    - "Space Physics>Interplanetary Studies",
+    - "Space Physics>Ionospheric Science"
+  default: null
+  required: true
+DOI:
+  description: >
+    Unique Digital Identifier (DOI) as a persistent identifier for the dataset, of the form https://doi.org/<PREFIX>/<SUFFIX> with the <PREFIX> identifying the DOI registration authority and the <SUFFIX> identifying the dataset.
+    The DOI should point to a landing page for additional information about the dataset.
+    DOIs are typically created by the SPASE naming authority or archive.
+  default: null
+  required: false # Recommended in ISTP Guide
+File_naming_convention:
+  description: >
+    If File_naming_convention was not set, it uses default setting:
+      source_datatype_descriptor_yyyyMMdd
+  default: source_datatype_descriptor_yyyyMMdd
+  required: false
+Generated_by:
+  description: >
+    This attribute allows for the generating data center/group to be identified.
+  default: null
+  required: false # Recommended in ISTP Guide
+Generation_date:
+  description: >
+    Date stamps the creation of the file using the syntax yyyymmdd, e.g., "
+  default: null
+  required: false # NOT Required in ISTP Guide (Recommended)
+HTTP_LINK:
+  description: >
+    This attribute stores the URL for the PI or CoI web site holding on-line data.
+    This attribute is used in conjunction with "LINK_TEXT" and "LINK_TITLE".
+    There can be up to 5 entries for each - there MUST be a corresponding entry of "LINK_TEXT" and "LINK_TITLE" for each "HTTP_LINK" entry.
+    CDAWeb will then link to the URL given by "HTTP_LINK" using the "LINK_TITLE" and the description in "LINK_TEXT", on the CDAWeb Data Explorer page.
+    For example:
+    - "LINK_TEXT" = 3-sec MGF magnetic field 1 Sep 1993 through 30 Sep 2015 available at
+    - "LINK_TITLE" = ISAS DARTS
+    - "HTTP_LINK" = https://www.darts.isas.jaxa.jp/stp/geotail/
+  default: null
+  required: false # Recommended in ISTP Guide
+Instrument_mode: # This may be an IMAP Specific attribute
+  description: >
+    TBS
+  default: null
+  required: false # NOT Required in ISTP Guide (Derived)
+Instrument_type:
+  description: >
+    This attribute is used to facilitate making choices of instrument type.
+    More than one entry is allowed.
+    Acceptable values include:
+    - Magnetic Fields (space)
+    - Particles (space)
+    - Plasma and Solar Wind
+    - Ephemeris -> Ephemeris/Attitude/Ancillary
+  default: null
+  required: true
+LINK_TEXT:
+  description: >
+    This attribute stores text describing on-line data available at PI or CoI web sites.
+    This attribute is used in conjunction with "LINK_TITLE" and "HTTP_LINK".
+    There can be up to 5 entries for each - there MUST be a corresponding entry of "LINK_TITLE" and "HTTP_LINK" for each "LINK_TEXT" entry.
+    CDAWeb will then link to the URL given by "HTTP_LINK" using the "LINK_TITLE" and the description in "LINK_TEXT", on the CDAWeb Data Explorer page.
+    For example:
+    - "LINK_TEXT" = 3-sec MGF magnetic field 1 Sep 1993 through 30 Sep 2015 available at
+    - "LINK_TITLE" = ISAS DARTS
+    - "HTTP_LINK" = https://www.darts.isas.jaxa.jp/stp/geotail/
+  default: null
+  required: false # Recommended in ISTP Guide
+LINK_TITLE:
+  description: >
+    This attribute stores the title of the web site holding on-line data available at PI or CoI web sites.
+    This attribute is used in conjunction with "LINK_TEXT" and "HTTP_LINK".
+    There can be up to 5 entries for each - there MUST be a corresponding entry of "LINK_TEXT" and "HTTP_LINK" for each "LINK_TITLE" entry.
+    CDAWeb will then link to the URL given by "HTTP_LINK" using the "LINK_TITLE" and the description in "LINK_TEXT", on the CDAWeb Data Explorer page.
+    For example:
+    - "LINK_TEXT" = 3-sec MGF magnetic field 1 Sep 1993 through 30 Sep 2015 available at
+    - "LINK_TITLE" = ISAS DARTS
+    - "HTTP_LINK" = https://www.darts.isas.jaxa.jp/stp/geotail/
+  default: null
+  required: false # Recommended in ISTP Guide
+Logical_file_id:
+  description: >
+    This attribute stores the name of the CDF file using the ISTP naming convention (source_name / data_type / descriptor / date / data_version), e.g., GE_K0_MGF_19920923_V01.
+    This attribute is required (1) to allow storage of the full name on IBM PCs, and (2) to avoid loss of the original source in the case of accidental (or intentional) renaming.
+    For CDFs created on the ISTP CDHF, the correct Logical_file_id will be filled in by an ICSS support routine.
+  default: null
+  required: true
+Logical_source:
+  description: >
+    This attribute carries source_name, data_type, and descriptor information. Used by CDAWeb.
+    It is composed of the following values:
+    - source_name - (e.g. spacecraft identifier)
+    - descriptor - (e.g. instrument identifier - see Section Error! Reference source not
+    found.)
+    - data_type - (e.g. mode, data level, and optional data product descriptor - value
+    come from 'Data_type' attribute)
+  default: null
+  required: true
+Logical_source_description:
+  description: >
+    This attribute writes out the full words associated with the encrypted Logical_source above, e.g., "Level 1 Dual Electron Spectrometer Survey Data".
+    Users on CDAWeb see this value on their website.
+  default: null
+  required: true
+Mission_group:
+  description: >
+    This attribute has a single value and is used to facilitate making choices of source through CDAWeb.
+    Valid values include (but are not restricted to):
+    - Geotail
+    - IMP8
+    - Wind
+    - Geosynchronous Investigations
+    - Ground-Based Investigations
+  default: null
+  required: true
+MODS:
+  description: >
+    This attribute is an NSSDC standard global attribute which is used to denote the history of modifications made to the CDF data set.
+    The MODS attribute should contain a description of all significant changes to the data set.
+    This attribute is not directly tied to Data_version, but each version produced will contain the relevant modifications.
+    This attribute can have as many entries as necessary to contain the desired information.
+  default: null
+  required: false # Recommended in ISTP Guide
+Parents:
+  description: >
+    This attribute lists the parent CDF(S) for files of derived and merged data sets.
+    Subsequent entry values are used for multiple parents.
+    The syntax for a CDF parent would be e.g. "CDF>logical_file_id".
+  default: null
+  required: false # Optional in ISTP Guide
+PI_affiliation:
+  description: >
+    This attribute value should include a recognizable abbreviation.
+  default: null
+  required: true
+PI_name:
+  description: >
+    This attribute value should include first initial and last name.
+  default: null
+  required: true
+Project:
+  description: >
+    This attribute identifies the name of the project and indicates ownership.
+    For ISTP missions and investigations, the value used is "ISTP>International Solar-Terrestrial Physics".
+    For the Cluster mission, the value is "STSP Cluster>Solar Terrestrial Science Programmes, Cluster".
+    Other acceptable values are "IACG>Inter-Agency Consultative Group", "CDAWxx>Coordinated Data Analysis Workshop xx", and "SPDS>Space Physics Data System".
+    Others may be defined in future.
+    This attribute can be multi-valued if the data has been supplied to more than one project.
+  default: null
+  required: true
+Rules_of_use:
+  description: >
+    Text containing information on, {\it e.g.} citability and PI access restrictions.
+    This may point to a World Wide Web page specifying the rules of use.
+  default: null
+  required: false # Recommended in ISTP Guide
+Skeleton_version:
+  description: >
+    This is a text attribute containing the skeleton file version number.
+    This is a required attribute for Cluster, but for IACG purposes it exists if experimenters want to track it.
+  default: null
+  required: false # Optional in ISTP Guide
+Software_version:
+  description: >
+    This is a required attribute for Cluster, but for IACG purposes it exists if experimenters want to track it.
+  default: null
+  required: false # Optional in ISTP Guide
+Source_name:
+  description: >
+    This attribute identifies the mission or investigation that contains the sensors.
+    For ISTP, this is the mission name for spacecraft missions or the investigation name
+    for ground-based or theory investigations. Both a long name and a short name are provided.
+    This attribute should be single valued.
+  default: null
+  required: true
+spase_DatasetResourceID:
+  description: >
+    Unique dataset identifier assigned by SPASE, of the form spase://<NAMING_AUTHORITY>/<UNIQUE_ID>, where <UNIQUE_ID> is the ID assigned to the SPASE resource record for the dataset in the SPASE system by a SPASE <NAMING_AUTHORITY>. The SPASE resource record provides metadata about the dataset, including pointers to locations holding the data.
+  default: null
+  required: false # Recommended in ISTP Guide
+Start_time:
+  description: >
+    The start time of the contained data given in YYYYMMDD_hhmmss
+  default: null
+  required: false # NOT Required in ISTP Guide (Derived)
+TEXT:
+  description: >
+    This attribute is an SPDF standard global attribute, which is a text description of the experiment whose data is included in the CDF.
+    A reference to a journal article(s) or to a World Wide Web page describing the experiment is essential and constitutes the minimum requirement.
+    A written description of the data set is also desirable.
+    This attribute can have as many entries as necessary to contain the desired information.
+    Typically, this attribute is about a paragraph in length and is not shown on CDAWeb.
+    CDAWeb is the web portal for access to SPDF data, available at https://cdaweb.gsfc.nasa.gov.
+  default: null
+  required: true
+Time_resolution:
+  description: >
+    This attribute identifies the time resolution of the data in the CDF file.
+    The time resolution is given in seconds.
+    For example, "3 seconds" for 3-second resolution data.
+  default: null
+  required: false # Recommended in ISTP Guide
+TITLE:
+  description: >
+    This attribute is an NSSDC standard global attribute which is a title for the data set, e.g., " Geotail EPIC Key Parameters".
+  default: null
+  required: false # Optional in ISTP Guide
+
+Validate:
+  description: >
+    Details to be specified.
+    This attribute is written by software for automatic validation of features such as the structure of the CDF file on a simple pass/fail criterion.
+    The software will test that all expected attributes are present and, where possible, have reasonable values.
+    The syntax is likely to be of the form "test>result>where-done>date".
+    It is not the same as data validation.
+  default: null
+  required: false # Optional in ISTP Guide

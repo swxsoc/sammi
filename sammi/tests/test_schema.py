@@ -5,7 +5,7 @@ from collections import OrderedDict
 import yaml
 import pandas as pd
 
-from swxschema.schema import SWxSchema
+from sammi.schema import SWxSchema
 
 
 def test_sw_schema_default():

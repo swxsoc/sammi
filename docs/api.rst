@@ -4,7 +4,7 @@
 API Reference
 *************
 
-.. automodapi:: swxschema
+.. automodapi:: sammi
    :no-inheritance-diagram:
-.. automodapi:: swxschema.schema
+.. automodapi:: sammi.schema
    :no-inheritance-diagram:
