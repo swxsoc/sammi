@@ -1,9 +1,3 @@
-"""
-Class for creating and managing CDF attrs.
-
-Developed based of HermesDataSchema from HERMES-SOC/hermes_core.
-"""
-
 from __future__ import annotations
 
 import logging
@@ -13,6 +7,8 @@ from typing import Optional
 import yaml
 
 import sammi
+
+__all__ = ["CdfAttributeManager"]
 
 DEFAULT_GLOBAL_CDF_ATTRS_SCHEMA_FILE = "default_global_cdf_attrs_schema.yaml"
 DEFAULT_VARIABLE_CDF_ATTRS_SCHEMA_FILE = "default_variable_cdf_attrs_schema.yaml"
