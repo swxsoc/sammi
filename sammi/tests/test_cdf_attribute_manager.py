@@ -1,6 +1,5 @@
 from pathlib import Path
 import tempfile
-from collections import OrderedDict
 
 import pytest
 import yaml
@@ -492,11 +491,11 @@ def test_sw_templates(cdf_manager):
 
     # Global Attribute Template
     assert cdf_manager.global_attribute_template() is not None
-    assert isinstance(cdf_manager.global_attribute_template(), OrderedDict)
+    assert isinstance(cdf_manager.global_attribute_template(), dict)
 
     # Variable Attribute Template
     assert cdf_manager.variable_attribute_template() is not None
-    assert isinstance(cdf_manager.variable_attribute_template(), OrderedDict)
+    assert isinstance(cdf_manager.variable_attribute_template(), dict)
 
 
 def test_sw_info(cdf_manager):

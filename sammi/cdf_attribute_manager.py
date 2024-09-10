@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from collections import OrderedDict
 from typing import Optional
 import yaml
 
@@ -103,11 +102,11 @@ class CdfAttributeManager:
         global_schema_layers: Optional[list[Path]] = None,
         variable_schema_layers: Optional[list[Path]] = None,
         use_defaults: Optional[bool] = True,
-    ):
+    ) -> None:
         # Input Validation
         if not use_defaults and (
-            global_schema_layers is None
-            or variable_schema_layers is None
+            not global_schema_layers
+            or not variable_schema_layers
             or len(global_schema_layers) == 0
             or len(variable_schema_layers) == 0
         ):
@@ -237,7 +236,7 @@ class CdfAttributeManager:
             yaml_data = yaml.safe_load(f)
         return yaml_data
 
-    def _merge(self, base_layer: dict, new_layer: dict, path: list = None):
+    def _merge(self, base_layer: dict, new_layer: dict, path: list = None) -> None:
         """
         Function to do in-place merging and updating of two dictionaries.
         This is an improvemnent over the built-in dict.update() method, as it allows for nested dictionaries and lists.
@@ -250,6 +249,10 @@ class CdfAttributeManager:
             The new dictionary to merge into the base.
         path : `list`
             The path to the current dictionary being merged. Used for recursion.
+
+        Returns
+        -------
+        None - operation is done in-place.
         """
         # If we are at the top of the recursion, and we don't have a path, create a new one
         if not path:
@@ -358,23 +361,25 @@ class CdfAttributeManager:
                 output[attr_name] = None
         return output
 
-    def global_attribute_template(self) -> OrderedDict:
+    def global_attribute_template(self) -> dict:
         """
         Function to generate a template of required global attributes
         that must be set for a valid data file.
 
         Returns
         -------
-        template : `OrderedDict`
+        template : `dict`
             A template for required global attributes that must be provided.
         """
-        template = OrderedDict()
+        template = {}
         for attr_name, attr_schema in self.global_attribute_schema.items():
             if attr_schema["required"] and attr_name not in self._global_attributes:
                 template[attr_name] = None
         return template
 
-    def global_attribute_info(self, attribute_name: Optional[str] = None):
+    def global_attribute_info(
+        self, attribute_name: Optional[str] = None
+    ) -> pd.DataFrame:
         """
         Function to generate a `pd.DataFrame` of information about each global
         metadata attribute. The `pd.DataFrame` contains all information in the SWxSOC
@@ -539,17 +544,17 @@ class CdfAttributeManager:
 
         return output
 
-    def variable_attribute_template(self) -> OrderedDict:
+    def variable_attribute_template(self) -> dict:
         """
         Function to generate a template of required variable attributes
         that must be set for a valid data file.
 
         Returns
         -------
-        template: `OrderedDict`
+        template: `dict`
             A template for required variable attributes that must be provided.
         """
-        template = OrderedDict()
+        template = {}
         for attr_name, attr_schema in self.variable_attribute_schema[
             "attribute_key"
         ].items():
@@ -557,7 +562,9 @@ class CdfAttributeManager:
                 template[attr_name] = None
         return template
 
-    def variable_attribute_info(self, attribute_name: Optional[str] = None):
+    def variable_attribute_info(
+        self, attribute_name: Optional[str] = None
+    ) -> pd.DataFrame:
         """
         Function to generate a `pd.DataFrame` of information about each variable
         metadata attribute. The `pd.DataFrame` contains all information in the SWxSOC
