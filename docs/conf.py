@@ -7,7 +7,8 @@
 # http://www.sphinx-doc.org/en/master/config
 import os
 import sys
-import pandas as pd
+import csv
+from pathlib import Path
 
 # The full version, including alpha/beta/rc tags
 from sammi import __version__
@@ -48,14 +49,36 @@ automodapi_toctreedirnm = "generated/api"
 # -- Generate CSV Files for Docs ---------------------------------------------
 if not os.path.exists("generated"):
     os.mkdir("generated")  # generate the directory before putting things in it
-# Global Attributes to CSV
 
-global_info: pd.DataFrame = CdfAttributeManager().global_attribute_info()
-global_info.to_csv("./generated/global_attributes.csv", index=False)
+
+def to_csv(info: dict, path: Path):
+    # Get Header
+    header_set = set()
+    for attr_details in info.values():
+        header_set.update(attr_details.keys())
+    headers = ["Attribute"] + sorted(header_set)
+
+    # Open the output file in write mode
+    with open(path, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        # Write the header row
+        writer.writerow(headers)
+
+        # Iterate over the dictionary and write each row
+        for attr_name, attr_details in info.items():
+            row = [attr_name]
+            for key in headers[1:]:  # Skip "Attribute" which is already added
+                row.append(attr_details.get(key, ""))
+            # Write the row to the CSV
+            writer.writerow(row)
+
+
+# Global Attributes to CSV
+global_info = CdfAttributeManager().global_attribute_info()
+to_csv(global_info, Path("./generated/global_attributes.csv"))
 
 # Variable Attributes to CSV
-variable_info: pd.DataFrame = CdfAttributeManager().variable_attribute_info()
-variable_info.to_csv("./generated/variable_attributes.csv", index=False)
+variable_info = CdfAttributeManager().variable_attribute_info()
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']

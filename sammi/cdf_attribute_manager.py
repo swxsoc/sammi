@@ -377,17 +377,15 @@ class CdfAttributeManager:
                 template[attr_name] = None
         return template
 
-    def global_attribute_info(
-        self, attribute_name: Optional[str] = None
-    ) -> pd.DataFrame:
+    def global_attribute_info(self, attribute_name: Optional[str] = None) -> dict:
         """
-        Function to generate a `pd.DataFrame` of information about each global
-        metadata attribute. The `pd.DataFrame` contains all information in the SWxSOC
+        Function to generate a `dict` of information about each global
+        metadata attribute. The `dict` contains all information in the
         global attribute schema including:
 
         - description: (`str`) A brief description of the attribute
         - default: (`str`) The default value used if none is provided
-        - required: (`bool`) Whether the attribute is required by SWxSOC standards
+        - required: (`bool`) Whether the attribute is required
 
 
         Parameters
@@ -397,30 +395,23 @@ class CdfAttributeManager:
 
         Returns
         -------
-        info: `pd.DataFrame`
-            A table of information about global metadata.
+        info: `dict`
+            information about global metadata
 
         Raises
         ------
         KeyError: If attribute_name is not a recognized global attribute.
         """
-        import pandas as pd
+        info = self.global_attribute_schema.copy()
 
         # Strip the Description of New Lines
-        for attr_name in self.global_attribute_schema.keys():
-            self.global_attribute_schema[attr_name]["description"] = (
-                self.global_attribute_schema[attr_name]["description"].strip()
-            )
-
-        # Create the Info Table
-        info = pd.DataFrame.from_dict(self.global_attribute_schema, orient="index")
-        # Reset the Index, add Attribute as new column
-        info.reset_index(names="Attribute", inplace=True)
+        for attr_name in info.keys():
+            info[attr_name]["description"] = info[attr_name]["description"].strip()
 
         # Limit the Info to the requested Attribute
-        if attribute_name and attribute_name in info["Attribute"].values:
-            info = info[info["Attribute"] == attribute_name]
-        elif attribute_name and attribute_name not in info["Attribute"].values:
+        if attribute_name and attribute_name in info:
+            info = info[attribute_name]
+        elif attribute_name and attribute_name not in info:
             raise KeyError(
                 f"Cannot find Global Metadata for attribute name: {attribute_name}"
             )
@@ -562,12 +553,10 @@ class CdfAttributeManager:
                 template[attr_name] = None
         return template
 
-    def variable_attribute_info(
-        self, attribute_name: Optional[str] = None
-    ) -> pd.DataFrame:
+    def variable_attribute_info(self, attribute_name: Optional[str] = None) -> dict:
         """
-        Function to generate a `pd.DataFrame` of information about each variable
-        metadata attribute. The `pd.DataFrame` contains all information in the SWxSOC
+        Function to generate a `dict` of information about each variable
+        metadata attribute. The `dict` contains all information in the SWxSOC
         variable attribute schema including:
 
         - description: (`str`) A brief description of the attribute
@@ -587,45 +576,34 @@ class CdfAttributeManager:
 
         Returns
         -------
-        info: `pd.DataFrame`
-            A table of information about variable metadata.
+        info: `dict`
+            information about variable metadata
 
         Raises
         ------
         KeyError: If attribute_name is not a recognized variable attribute.
         """
-        import pandas as pd
-
-        measurement_attribute_key = self.variable_attribute_schema["attribute_key"]
+        info = self.variable_attribute_schema["attribute_key"].copy()
 
         # Strip the Description of New Lines
-        for attr_name in measurement_attribute_key.keys():
-            measurement_attribute_key[attr_name]["description"] = (
-                measurement_attribute_key[attr_name]["description"].strip()
-            )
+        for attr_name in info.keys():
+            info[attr_name]["description"] = info[attr_name]["description"].strip()
 
         # Create New Column to describe which VAR_TYPE's require the given attribute
-        for attr_name in measurement_attribute_key.keys():
+        for attr_name in info.keys():
             # Create a new list to store the var types
-            measurement_attribute_key[attr_name]["var_types"] = []
+            info[attr_name]["var_types"] = []
             for var_type in ["data", "support_data", "metadata"]:
                 # If the attribute is required for the given var type
                 if attr_name in self.variable_attribute_schema[var_type]:
-                    measurement_attribute_key[attr_name]["var_types"].append(var_type)
+                    info[attr_name]["var_types"].append(var_type)
             # Convert the list to a string that can be written to a CSV from the table
-            measurement_attribute_key[attr_name]["var_types"] = ", ".join(
-                measurement_attribute_key[attr_name]["var_types"]
-            )
-
-        # Create the Info Table
-        info = pd.DataFrame.from_dict(measurement_attribute_key, orient="index")
-        # Reset the Index, add Attribute as new column
-        info.reset_index(names="Attribute", inplace=True)
+            info[attr_name]["var_types"] = ", ".join(info[attr_name]["var_types"])
 
         # Limit the Info to the requested Attribute
-        if attribute_name and attribute_name in info["Attribute"].values:
-            info = info[info["Attribute"] == attribute_name]
-        elif attribute_name and attribute_name not in info["Attribute"].values:
+        if attribute_name and attribute_name in info:
+            info = info[attribute_name]
+        elif attribute_name and attribute_name not in info:
             raise KeyError(
                 f"Cannot find Variable Metadata for attribute name: {attribute_name}"
             )

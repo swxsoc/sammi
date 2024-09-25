@@ -3,7 +3,6 @@ import tempfile
 
 import pytest
 import yaml
-import pandas as pd
 
 from sammi.cdf_attribute_manager import CdfAttributeManager
 
@@ -503,18 +502,18 @@ def test_sw_info(cdf_manager):
 
     # Global Attribute Info
     assert cdf_manager.global_attribute_info() is not None
-    assert isinstance(cdf_manager.global_attribute_info(), pd.DataFrame)
+    assert isinstance(cdf_manager.global_attribute_info(), dict)
     assert isinstance(
-        cdf_manager.global_attribute_info(attribute_name="Descriptor"), pd.DataFrame
+        cdf_manager.global_attribute_info(attribute_name="Descriptor"), dict
     )
     with pytest.raises(KeyError):
         _ = cdf_manager.global_attribute_info(attribute_name="NotAnAttribute")
 
     # Variable Attribute Info
     assert cdf_manager.variable_attribute_info() is not None
-    assert isinstance(cdf_manager.variable_attribute_info(), pd.DataFrame)
+    assert isinstance(cdf_manager.variable_attribute_info(), dict)
     assert isinstance(
-        cdf_manager.variable_attribute_info(attribute_name="CATDESC"), pd.DataFrame
+        cdf_manager.variable_attribute_info(attribute_name="CATDESC"), dict
     )
     with pytest.raises(KeyError):
         _ = cdf_manager.variable_attribute_info(attribute_name="NotAnAttribute")
