@@ -30,7 +30,6 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  'pandas>=2.2.0',
   'coverage>=5.0.3',
   'pytest==8.0.0',
   'pytest-astropy==0.11.0',
@@ -41,14 +40,12 @@ dev = [
 ]
 
 docs = [
-  'pandas>=2.2.0',
   'sphinx==7.2.6',
   'sphinx-automodapi==0.16.0',
   'sphinx-copybutton==0.5.2'
 ]
 
 test = [
-  'pandas>=2.2.0',
   'pytest==8.0.0',
   'pytest-astropy==0.11.0',
   'pytest-cov==4.1.0',

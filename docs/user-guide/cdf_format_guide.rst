@@ -8,7 +8,7 @@ CDF Format Guide
 1. Introduction
 ===============
 
-The :py:class:`~swxsoc.util.schema.SWXSchema` class provides an interface to examine the SWxSOC CDF Format Guide.
+The :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` class provides an interface to examine the CDF Format Guide.
 
 ---------------------
 1.1 Purpose and Scope

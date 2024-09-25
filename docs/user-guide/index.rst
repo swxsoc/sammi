@@ -10,5 +10,5 @@ For more details checkout the :ref:`reference`.
 .. toctree::
    :maxdepth: 2
 
-   schema_information_guide
+   cdf_attribute_management
    cdf_format_guide
