@@ -79,6 +79,7 @@ to_csv(global_info, Path("./generated/global_attributes.csv"))
 
 # Variable Attributes to CSV
 variable_info = CdfAttributeManager().variable_attribute_info()
+to_csv(variable_info, Path("./generated/variable_attributes.csv"))
 
 # Add any paths that contain templates here, relative to this directory.
 # templates_path = ['_templates']
