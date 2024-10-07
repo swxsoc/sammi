@@ -25,12 +25,13 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
 ]
 
-[project.urls]
-Homepage = "https://github.com/swxsoc/sammi"
-
 dependencies = [
   'pyyaml>=5.3.1',
 ]
+
+[project.urls]
+Homepage = "https://github.com/swxsoc/sammi"
+
 
 [project.optional-dependencies]
 dev = [
