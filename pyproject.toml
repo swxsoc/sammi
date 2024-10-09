@@ -15,7 +15,6 @@ requires-python = ">=3.9"
 keywords = ["sammi", "nasa mission", "space weather"]
 classifiers = [
     "Development Status :: 3 - Alpha",
-    "License :: OSI Approved :: Apache 2.0",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
