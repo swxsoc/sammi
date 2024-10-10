@@ -74,9 +74,6 @@ def test_cdf_manager_custom_layers():
             default: null
             required: true
         Data_type:
-            description: >
-                This attribute is used by CDF file writing software to create a filename.
-            default: null
             required: true   # NOT originally required in Default Schema
         """
 
@@ -126,6 +123,10 @@ def test_cdf_manager_custom_layers():
         # Assert Data_type is Overwritten in Global Schema
         assert "Data_type" in cdf_manager.global_attribute_schema
         assert cdf_manager.global_attribute_schema["Data_type"]["required"]
+        # Assert other Data_type attributes are not overwritten
+        assert (
+            cdf_manager.global_attribute_schema["Data_type"]["description"] is not None
+        )
 
         assert cdf_manager.variable_attribute_schema is not None
         # Assert Test Attribute is Added to the Variable Schema

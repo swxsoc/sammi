@@ -268,7 +268,6 @@ TITLE:
     This attribute is an NSSDC standard global attribute which is a title for the data set, e.g., " Geotail EPIC Key Parameters".
   default: null
   required: false # Optional in ISTP Guide
-
 Validate:
   description: >
     Details to be specified.

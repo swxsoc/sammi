@@ -268,7 +268,7 @@ class CdfAttributeManager:
                     # Merge the two nested dictionaries together
                     self._merge(base_layer[key], new_layer[key], path + [str(key)])
                 # If both are lists
-                if isinstance(base_layer[key], list) and isinstance(
+                elif isinstance(base_layer[key], list) and isinstance(
                     new_layer[key], list
                 ):
                     # Extend the list of the base layer by the new layer
