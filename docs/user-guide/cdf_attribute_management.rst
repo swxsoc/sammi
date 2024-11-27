@@ -154,3 +154,140 @@ Each of the keys for variable metadata requirements are defined in the table bel
       - `True`
 
 For more information on the default CDF schema, conforming to ISTP standards, please see the :doc:`CDF Format Guide </user-guide/cdf_format_guide>`. 
+
+
+Creating and Using Attribute Files
+==================================
+
+Attribute files for CDF are also stored in YAML format. Like the schemas, these files can be layered and combined together to create some shared default
+values and overwrite them with other files.
+
+It is also possible to use YAML syntax to create complex data structures. For example, YAML anchors and aliases can be used to create a base set of attributes and then extend them for specific instruments or data levels.
+
+.. code-block:: yaml
+
+    int_fillval: &int_fillval -9223372036854775808
+
+    base_attributes: &base
+        DISPLAY_TYPE: no_plot
+        TIME_BASE: J2000
+        TIME_SCALE: Terrestrial Time
+        FILLVAL: *int_fillval
+
+    variable_attribute:
+        <<: *base
+        CATDESC: Variable attribute description
+
+`More information on YAML syntax. <https://www.yaml.info/learn/index.html>`_
+
+Global attributes are defined using the key-value pairs for required and optional attributes. (example taken from `IMAP <https://github.com/IMAP-Science-Operations-Center/imap_processing/blob/dev/imap_processing/cdf/config/imap_default_global_cdf_attrs.yaml>`_):
+
+.. code-block:: yaml
+
+    Project: STP>Solar Terrestrial Probes
+    Source_name: IMAP>Interstellar Mapping and Acceleration Probe
+    Discipline: Solar Physics>Heliospheric Physics
+    Mission_group: IMAP
+
+It is also possible to create instrument and level specific global attributes. For example, the ``Data_level`` global attribute is specific to the level of the data product. These can be defined as "instrument_ids" in one file and retrieved one at a time.
+
+Example taken from `the GLOWS instrument <https://github.com/IMAP-Science-Operations-Center/imap_processing/blob/dev/imap_processing/cdf/config/imap_glows_global_cdf_attrs.yaml>`_ on IMAP.
+
+.. code-block:: yaml
+
+    instrument_base: &instrument_base
+      Descriptor: GLOWS>GLObal Solar Wind Structure
+      TEXT: >
+        The GLObal Solar Wind Structure (GLOWS) is a non-imaging single-pixel Lyman-alpha
+        photometer to investigate the global heliolatitudinal structure of the solar wind
+        and its evolution during the solar cycle. Additionally, GLOWS investigates the
+        distribution of interstellar neutral hydrogen (ISN H) and the solar radiation
+        pressure acting on ISN H. The objectives of GLOWS are accomplished by observation
+        of the modulation of heliospheric backscatter glow of ISN H (the helioglow)
+        along a scanning circle in the sky.
+        GLOWS design and assembly is led by the Space Research Center, Warsaw, Poland
+        (CBK PAN). See https://imap.princeton.edu/instruments/glows for more details.
+      Instrument_type: Imagers (space)
+
+    imap_glows_l1a_hist:
+      <<: *instrument_base
+      Data_level: L1A
+      Data_type: L1A_hist>Level-1A histogram
+      Logical_source: imap_glows_l1a_hist
+      Logical_source_description: IMAP Mission GLOWS Histogram Level-1A Data.
+
+    imap_glows_l1a_de:
+      <<: *instrument_base
+      Data_level: L1A
+      Data_type: L1A_de>Level-1A direct event
+      Logical_source: imap_glows_l1a_de
+      Logical_source_description: IMAP Mission GLOWS Direct Event Level-1A Data.
+
+
+These global attributes can be added to an instance of cdf_attribute_manager and then retrieved and validated:
+
+.. code-block:: python
+
+    shared_global_attributes = Path("shared_global_attributes.yaml")
+    instrument_global_attributes = Path("instrument_global_attributes.yaml")
+
+    cdf_manager = CdfAttributeManager(use_defaults=True)
+
+    # Load in the global attributes
+    cdf_manager.load_global_attributes(shared_global_attributes)
+    cdf_manager.load_global_attributes(instrument_global_attributes)
+
+    # retrieve the global attributes, including the specific GLOWS L1A Histogram attributes
+    global_attrs = cdf_manager.get_global_attributes(instrument_id="imap_glows_l1a_hist")
+
+
+Variable attribute files work similarly to the instrument ID. Each variable has a name assigned to it, which then has a set of attributes associated with it. YAML anchors and aliases are used to create
+defaults and shared information. Then, the variable attributes are retrieved with the name.
+
+
+.. code-block:: yaml
+
+    int_fillval: &int_fillval -9223372036854775808
+
+    default_attrs: &default_attrs
+      DISPLAY_TYPE: no_plot
+      TIME_BASE: J2000
+      TIME_SCALE: Terrestrial Time
+      REFERENCE_POSITION: Rotating Earth Geoid
+      FILLVAL: *int_fillval
+
+    support_data_defaults: &support_data_defaults
+      <<: *default_attrs
+      DEPEND_0: epoch
+      VALIDMIN: 0
+      VALIDMAX: 1
+      DISPLAY_TYPE: time_series
+      VAR_TYPE: support_data
+      FORMAT: I10
+      RESOLUTION: ISO8601
+
+    bins_attrs:
+      <<:  *default_attrs
+      VALIDMAX: 3599
+      CATDESC: Histogram bin number
+      FIELDNAM: Bin number
+      FORMAT: I5
+      LABLAXIS: Counts
+      FILLVAL: -32768
+      MONOTON: INCREASE
+      SCALETYP: linear
+
+
+These variable attributes can be added to an instance of cdf_attribute_manager and then retrieved and validated:
+
+.. code-block:: python
+
+    variable_attributes = Path("variable_attributes.yaml")
+
+    # Load attributes
+    cdf_manager.load_variable_attributes(variable_attributes)
+
+    # Retrieve attributes
+    variable_attrs = cdf_manager.get_variable_attributes("bins_attrs")
+
+All the attributes are validated to ISTP standards once retrieved using ``get_variable_attributes()``. Validation can be skipped with the ``check_schema`` flag on ``get_variable_attributes()``.
