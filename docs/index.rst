@@ -1,7 +1,7 @@
-SWxSchema Documentation
+SAMMI Documentation
 -------------------------
 
-This is the documentation for the `swxschema`` Python Package.
+This is the documentation for the ``sammi`` Python Package.
 
 .. toctree::
    :maxdepth: 2
