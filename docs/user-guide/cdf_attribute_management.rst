@@ -7,14 +7,16 @@ Using SAMMI CDF Attribute Manager for Metadata Attributes
 Overview
 ========
 
-The :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` class provides an interface to configure how metadata attributes are formatted in SWxSOC affiliated data products.
+The :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` class provides an interface to configure how metadata attributes are formatted in data products.
 The class represents a schema for metadata attribute requirements, validation, and formatting.
 
 It is important to understand the configuration options of :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` objects in order to attain the desired behavior of metadata attributes.
 
 The :py:class:`~sammi.cdf_attribute_manager.CdfAttributeManager` class has two main attributes.
-The class contains a :py:attr:`~sammi.cdf_attribute_manager.CdfAttributeManager.global_attribute_schema` member which configures global, or file level, metadata attributes.
-Second, the class contains a  :py:attr:`~sammi.cdf_attribute_manager.CdfAttributeManager.variable_attribute_schema` member which configures variable or measurement level metadata attributes.
+
+* The class contains a :py:attr:`~sammi.cdf_attribute_manager.CdfAttributeManager.global_attribute_schema` member which configures global, or file level, metadata attributes.
+* Second, the class contains a  :py:attr:`~sammi.cdf_attribute_manager.CdfAttributeManager.variable_attribute_schema` member which configures variable or measurement level metadata attributes.
+
 This guide contains two sections detailing the format of each of these class members, how they're used, and how you can extend or modify them to meet your specific needs.
 
 Each of the global and variable schemas are loaded from YAML (dict-like) files which can be combined to layer multiple schema elements into a single unified schema.
@@ -174,8 +176,13 @@ It is also possible to use YAML syntax to create complex data structures. For ex
         TIME_SCALE: Terrestrial Time
         FILLVAL: *int_fillval
 
+    variable_defaults:
+        VAR_TYPE: data
+        FORMAT: I10
+
     variable_attribute:
         <<: *base
+        <<: *variable_defaults
         CATDESC: Variable attribute description
 
 `More information on YAML syntax. <https://www.yaml.info/learn/index.html>`_
