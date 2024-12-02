@@ -176,7 +176,7 @@ It is also possible to use YAML syntax to create complex data structures. For ex
         TIME_SCALE: Terrestrial Time
         FILLVAL: *int_fillval
 
-    variable_defaults:
+    variable_defaults: &variable_defaults
         VAR_TYPE: data
         FORMAT: I10
 
