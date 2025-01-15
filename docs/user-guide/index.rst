@@ -12,3 +12,4 @@ For more details checkout the :ref:`reference`.
 
    cdf_attribute_management
    cdf_format_guide
+   cdf_validation
