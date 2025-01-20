@@ -1,10 +1,8 @@
 from pathlib import Path
-import tempfile
 import requests
 import requests_mock
 
 import pytest
-import yaml
 
 from sammi.validation import CDFValidator
 
@@ -22,7 +20,7 @@ def test_validate_raw_valid_cdf(validator: CDFValidator):
 
     result = validator.validate_raw(test_data_dir / "test_valid.cdf")
     assert type(result) == str
-    assert "Error" not in result
+    assert "The following variables are not ISTP-compliant" not in result
 
 
 def test_validate_raw_invalid_cdf(validator: CDFValidator):
@@ -31,7 +29,8 @@ def test_validate_raw_invalid_cdf(validator: CDFValidator):
 
     result = validator.validate_raw(test_data_dir / "test_invalid.cdf")
     assert type(result) == str
-    assert "Error" in result
+    assert "Global errors" in result
+    assert "The following variables are not ISTP-compliant" in result
 
 
 def test_validate_raw_no_internet(validator: CDFValidator):
