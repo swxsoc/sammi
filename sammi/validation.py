@@ -75,21 +75,33 @@ class CDFValidator:
         """
         errors = []
         current_section = None
+        current_variable = None
 
         if raw_response.startswith("API request failed:"):
             return [raw_response]
 
         for line in raw_response.splitlines():
-            if "Global attribute issues:" in line:
-                current_section = "Global attribute issues"
-            elif line.startswith("Variable"):
-                current_section = line.strip()
-            elif "FAILED variable checks. Errors:" in line:
-                continue
+            if "Global errors:" in line:
+                current_section = "Global errors"
+                current_variable = None
+            elif "The following variables are not ISTP-compliant" in line:
+                current_section = "Variable"
+                current_variable = None
+            # Two tabs for each new variable name, 4 tabs for each error for that variable.
+            elif (
+                current_section == "Variable"
+                and line.startswith("\t")
+                and not line.startswith("\t\t")
+            ):
+                current_variable = line.strip()
             elif current_section and line.strip() and "Warning" not in line:
-                errors.append(f"{current_section}: {line.strip()}")
+                if current_section == "Variable" and current_variable:
+                    errors.append(f"{current_variable}:: {line.strip()}")
+                else:
+                    errors.append(f"{current_section}: {line.strip()}")
             elif current_section and not line.strip():
                 current_section = None
+                current_variable = None
 
         # Filter out any entries that are just section headers without actual errors
         errors = [error for error in errors if not error.endswith(":")]
