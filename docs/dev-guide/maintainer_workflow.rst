@@ -99,7 +99,7 @@ Push to open pull request
 
 Now you need to push the changes you have made to the code to the open pull request::
 
-    $ git push git@github.com:<username>/swxschema.git HEAD:<name of branch>
+    $ git push git@github.com:<username>/sammi.git HEAD:<name of branch>
 
 You might have to add ``--force`` if you rebased instead of adding new commits.
 

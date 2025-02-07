@@ -20,9 +20,9 @@ To link to other methods, classes, or modules in your repo you have to use backt
 
 .. code-block:: rst
 
-    `swxschema.schema.global_attribute_template`
+    `sammi.schema.global_attribute_template`
 
-generates a link like this: `swxschema.io.global_attribute_template`.
+generates a link like this: `sammi.io.global_attribute_template`.
 
 Other packages can also be linked via
 `intersphinx <http://www.sphinx-doc.org/en/master/ext/intersphinx.html>`_:
