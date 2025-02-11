@@ -35,7 +35,7 @@ Where to put tests
 Each package should include a suite of unit tests, covering as many of the public methods/functions as possible.
 These tests should be included inside each package, e.g::
 
-    swxschema/tests/
+    sammi/tests/
 
 "tests" directories should contain an ``__init__.py`` file so that the tests can be imported.
 

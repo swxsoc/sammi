@@ -3,7 +3,7 @@ Overview
 ========
 
 SAMMI (Shared Attribute and Metadata Management Interface) is a python package that provides a schema for metadata attributes within space weather data products.
-This package is a SWxSOC project and can be used in conjunction with other SWxSOC projects, or as a standalone package. 
+This package is a SWxSOC project and can be used in conjunction with other SWxSOC projects, or as a standalone package.
 
 .. start-badges
 
@@ -15,31 +15,41 @@ This package is a SWxSOC project and can be used in conjunction with other SWxSO
     * - build status
       - |testing| |codestyle| |coverage|
 
-.. |docs| image:: https://github.com/swxsoc/swxschema/actions/workflows/docs.yml/badge.svg
-    :target: https://github.com/swxsoc/swxschema/actions/workflows/docs.yml
+.. |docs| image:: https://github.com/swxsoc/sammi/actions/workflows/docs.yml/badge.svg
+    :target: https://github.com/swxsoc/sammi/actions/workflows/docs.yml
     :alt: Documentation Build Status
 
-.. |testing| image:: https://github.com/swxsoc/swxschema/actions/workflows/testing.yml/badge.svg
-    :target: https://github.com/swxsoc/swxschema/actions/workflows/testing.yml
+.. |testing| image:: https://github.com/swxsoc/sammi/actions/workflows/testing.yml/badge.svg
+    :target: https://github.com/swxsoc/sammi/actions/workflows/testing.yml
     :alt: Build Status
 
-.. |codestyle| image:: https://github.com/swxsoc/swxschema/actions/workflows/codestyle.yml/badge.svg
-    :target: https://github.com/swxsoc/swxschema/actions/workflows/codestyle.yml
+.. |codestyle| image:: https://github.com/swxsoc/sammi/actions/workflows/codestyle.yml/badge.svg
+    :target: https://github.com/swxsoc/sammi/actions/workflows/codestyle.yml
     :alt: Codestyle and linting using flake8
 
-.. |coverage| image:: https://codecov.io/gh/swxsoc/swxschema/branch/main/graph/badge.svg?token=C6JLIWZRBU 
-    :target: https://codecov.io/gh/swxsoc/swxschema
+.. |coverage| image:: https://codecov.io/gh/swxsoc/sammi/branch/main/graph/badge.svg?token=C6JLIWZRBU
+    :target: https://codecov.io/gh/swxsoc/sammi
     :alt: Testing coverage
 
-.. |readthedocs| image:: https://readthedocs.org/projects/swxschema/badge/?version=latest
-    :target: https://swxschema.readthedocs.io/en/latest/?badge=latest
+.. |readthedocs| image:: https://readthedocs.org/projects/sammi/badge/?version=latest
+    :target: https://sammi.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
 .. end-badges
 
+Installation
+------------
+
+SAMMI can be found on PyPI at `https://pypi.org/project/sammi-cdf/ <https://pypi.org/project/sammi-cdf/>`_ and can be installed using pip:
+
+.. code-block:: bash
+
+    pip install sammi-cdf
+
 Documentation
 -------------
-The documentation is hosted on readthedocs and is available `here <https://swxschema.readthedocs.io/en/latest/>`_.
+
+The documentation is hosted on readthedocs and is available at `https://sammi-cdf.readthedocs.io <https://sammi-cdf.readthedocs.io>`_.
 
 License
 -------

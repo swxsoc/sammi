@@ -68,7 +68,7 @@
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// package is uninstalled from the container image after it is created to avoid circular import errors during development
-	"postCreateCommand": "sudo pip3 uninstall sammi -y",
+	"postCreateCommand": "sudo pip3 uninstall sammi-cdf -y",
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }

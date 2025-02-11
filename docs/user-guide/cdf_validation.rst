@@ -7,9 +7,6 @@ Using SAMMI CDF Validator for ISTP Attribute Validation
 Overview
 ========
 
-Overview
-========
-
 The :py:class:`~sammi.validation.CDFValidator` class provides an interface to validate CDF files against the ISTP guidelines using the SPDF validation API.
 This ensures that your CDF files conform to the required standards and helps identify any issues with the metadata attributes.
 
