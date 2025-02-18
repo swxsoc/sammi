@@ -112,7 +112,7 @@ Acknowledging or Citing SAMMI
 If you use `sammi` in your work, we kindly ask you to `acknowledge sammi`_ in your publications and presentations.
 The continued growth and development of `sammi` is dependent on the community being aware of `sammi`.
 
-.. _acknowledge sammi: https://sammi-cdf.readthedocs.org/en/stable/acknowledging.html
+.. _acknowledge sammi: https://sammi-cdf.readthedocs.org/en/latest/acknowledging.html
 
 Public Domain
 -------------
