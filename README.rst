@@ -14,6 +14,8 @@ This package is a SWxSOC project and can be used in conjunction with other SWxSO
       - |docs| |readthedocs|
     * - build status
       - |testing| |codestyle| |coverage|
+    * - DOI
+      - |DOI|
 
 .. |docs| image:: https://github.com/swxsoc/sammi/actions/workflows/docs.yml/badge.svg
     :target: https://github.com/swxsoc/sammi/actions/workflows/docs.yml
@@ -34,6 +36,10 @@ This package is a SWxSOC project and can be used in conjunction with other SWxSO
 .. |readthedocs| image:: https://readthedocs.org/projects/sammi-cdf/badge/?version=latest
     :target: https://sammi-cdf.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
+
+.. |DOI| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.14887800.svg
+    :target: https://doi.org/10.5281/zenodo.14887800
+    :alt: DOI
 
 .. end-badges
 
@@ -96,8 +102,17 @@ our `Code of Conduct <https://github.com/swxsoc/code-of-conduct/blob/main/CODE_O
 
 Acknowledgements
 ----------------
+
 The package template used by this package is based on the one developed by the
 `OpenAstronomy community <https://openastronomy.org>`_ and the `SunPy Project <https://sunpy.org/>`_.
+
+Acknowledging or Citing SAMMI
+-----------------------------
+
+If you use `sammi` in your work, we kindly ask you to `acknowledge sammi`_ in your publications and presentations.
+The continued growth and development of `sammi` is dependent on the community being aware of `sammi`.
+
+.. _acknowledge sammi: https://sammi-cdf.readthedocs.org/en/stable/acknowledging.html
 
 Public Domain
 -------------
