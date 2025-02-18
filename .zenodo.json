@@ -1,0 +1,22 @@
+{
+    "title": "sammi-cdf",
+    "description": "A Python package to support metadata attribute management for Space Weather data processing pipelines.",
+    "authors": [
+        {
+            "name": "Andrew Robbertz",
+            "affiliation": "NASA Goddard Space Flight Center (GSFC)",
+            "orcid": "0009-0008-6857-0882"
+        },
+        {
+            "name": "Maxine Hartnett",
+            "affiliation": "Laboratory for Atmospheric and Space Physics",
+            "orcid": "0009-0002-1495-5652"
+        }
+    ],
+    "license": "Apache-2.0",
+    "keywords": [
+        "sammi",
+        "space weather"
+    ],
+    "access_right": "open"
+}

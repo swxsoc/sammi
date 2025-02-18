@@ -31,8 +31,8 @@ This package is a SWxSOC project and can be used in conjunction with other SWxSO
     :target: https://codecov.io/gh/swxsoc/sammi
     :alt: Testing coverage
 
-.. |readthedocs| image:: https://readthedocs.org/projects/sammi/badge/?version=latest
-    :target: https://sammi.readthedocs.io/en/latest/?badge=latest
+.. |readthedocs| image:: https://readthedocs.org/projects/sammi-cdf/badge/?version=latest
+    :target: https://sammi-cdf.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
 .. end-badges
