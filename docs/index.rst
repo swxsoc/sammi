@@ -10,4 +10,5 @@ For more information about the SAMMI project, please visit our GitHub page at `h
    whatsnew/index
    user-guide/index
    dev-guide/index
+   acknowledging
    api
