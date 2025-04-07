@@ -232,7 +232,7 @@ class CdfAttributeManager:
         assert Path(file_path).exists()
         # Load the Yaml file to Dict
         yaml_data = {}
-        with open(file_path, "r") as f:
+        with open(file_path, "rb") as f:
             yaml_data = yaml.safe_load(f)
         return yaml_data
 
