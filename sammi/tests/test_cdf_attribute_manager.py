@@ -485,6 +485,9 @@ def test_get_variable_attributes(cdf_manager):
     assert imap_test_variable_1_false["NOT_IN_SCHEMA"] == "not_in_schema"
     assert imap_test_variable_1_false["VALIDMIN"] == 0
 
+    var_with_non_ascii_text = cdf_manager.get_variable_attributes("test_field_4")
+    assert var_with_non_ascii_text["CATDESC"] == "α-particles"
+
 
 def test_sw_templates(cdf_manager):
     """Test Global and Variable Attribute Templates"""
