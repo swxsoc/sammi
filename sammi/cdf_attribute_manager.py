@@ -535,7 +535,8 @@ class CdfAttributeManager:
 
         return output
 
-    def add_variable_attribute(self, attribute_name: str, attribute_value: str) -> None:
+    def add_variable_attribute(self, variable_name: str, attribute_name: str,
+                               attribute_value: str) -> None:
         """
         Add a single variable attribute to the variable attributes.
 
@@ -553,7 +554,9 @@ class CdfAttributeManager:
         attribute_value : str
             The value of the attribute to add.
         """
-        self._variable_attributes[attribute_name] = attribute_value
+        if variable_name not in self._variable_attributes:
+            self._variable_attributes[variable_name] = {}
+        self._variable_attributes[variable_name][attribute_name] = attribute_value
 
     def variable_attribute_template(self) -> dict:
         """
