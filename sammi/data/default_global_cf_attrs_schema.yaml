@@ -1,0 +1,241 @@
+# Schema is based on CF conventions as defined by NASA GES DISC Archive's
+# Data and Metadata Recommendations to Data providers document:
+# https://docserver.gesdisc.eosdis.nasa.gov/public/project/DataPub/GES_DISC_metadata_and_data_formats.pdf
+
+# Collection Level global metadata
+ShortName:
+  description: >
+    mnemonic or acronym of the data product name
+  default: null
+  required: true
+LongName:
+    description: >
+        a descriptive product name
+    default: null
+    required: true
+VersionID:
+  description: >
+    collection version of the data product
+  default: null
+  required: true
+Format:
+  description: >
+    file format of the data file
+  default: null
+  required: true
+ProcessingLevel:
+  description: >
+    The processing Level ( e.g., Level 1, 1B, 2, 2A, 2G, 3, 4)
+  default: null
+  required: true
+IdentifierProductDOIAuthority:
+  description: >
+    https://doi.org/ - product DOI authority
+  default: null
+  required: true
+IdentifierProductDOI:
+  description: >
+    10.5067/xxxxxx - product DOI number
+  default: null
+  required: true
+Conventions:
+  description: >
+    This should be an attribute with the value, e.g., “CF-1.n,” where n=0, 1, 2, 3, ...
+  default: null
+  required: true
+source:
+  description: >
+    Platforms/Instruments and any other factors related to the origin of the data product or products (if multi-sensor merged)
+  default: null
+  required: true
+DataSetQuality:
+    description: >
+       Overall assessment of quality of data, including relevant articles. Short summary is preferred.
+    default: null
+    required: true
+MapProjection:
+    description: >
+        Applies to gridded data. Useful for application data tools, such as ArcGIS
+    default: null
+    required: false
+ValidationData:
+    description: >
+        Description of or reference on how the data were validated
+    default: null
+    required: false
+history:
+    description: >
+        An audit trail for modifications to the original data. Well-behaved generic netCDF filters automatically append their names and the parameters with which they were invoked to the global history attribute of an input netCDF file. We recommend that each line begins with a timestamp indicating the date and time of day that the program was executed.
+    default: null
+    required: false
+references:
+    description: >
+      Published or Web-based references that describe the data or methods used to produce the data, e.g.,
+      Algorithm Theoretical Basis Document
+      (ATBD) for the algorithm
+    default: null
+    required: false
+ContactPersonName:
+    description: >
+        Name of the responsible person
+    default: null
+    required: false
+ContactPersonRole:
+    description: >
+        Role of the responsible person
+    default: null
+    required: false
+ContactPersonEmail:
+    description: >
+        electronicMailAddress of the responsible person
+    default: null
+    required: false
+ContactPersonAddress:
+    description: >
+        Location of the responsible person or organization
+    default: null
+    required: false
+RelatedURL:
+    description: >
+        Information about online sources related to the data
+    default: null
+    required: false
+title:
+    description: >
+      A succinct description of the data set
+      (similar to or same as LongName)
+    default: null
+    required: false
+institution:
+    description: >
+      Where the data were produced
+    default: null
+    required: false
+ProjectAbstract:
+    description: >
+      A brief summary of the project from which the data originated
+    default: null
+    required: false
+DataSetLanguage:
+    description: >
+      Language used within the data set, LanguageCode=ISO 639
+      default=English
+    default: null
+    required: false
+ProductParameters:
+    description: >
+      Keywords describing the data set
+    default: null
+    required: false
+Keyword:
+    description: >
+      Commonly-use word(s) or phrase(s), e.g., Deep Blue Algorithm
+    default: null
+    required: false
+ProcessingCenter:
+    description: >
+      Organization from which the data set can be obtained
+    default: null
+    required: false
+InputDataProducts:
+    description: >
+      Input data to the product of interest
+    default: null
+    required: false
+InputDataProductVersion:
+    description: >
+      Input data version
+    default: null
+    required: false
+DataProgress:
+    description: >
+      Status of data set
+    default: null
+    required: false
+TemporalRange:
+    description: >
+      Time period covered by the data set
+    default: null
+    required: false
+SpatialCoverage:
+    description: >
+      Geographic domain of the data set
+    default: null
+    required: false
+DataResolution:
+    description: >
+      Information about spatial resolution
+    default: null
+    required: false
+
+# Granule Level global metadata
+GranuleID:
+  description: >
+    name of the data granule (most commonly filename for single-file granules)
+  default: null
+  required: true
+RangeBeginningDate:
+    description: >
+        start date of the data in the file (format YYYY-MM-DD)
+    default: null
+    required: true
+RangeBeginningTime:
+    description: >
+        start time UTC of the data (format hh:mm:ss.ssssss)
+    default: null
+    required: true
+RangeEndingDate:
+    description: >
+        end date of the data in the file (format YYYY-MM-DD)
+    default: null
+    required: true
+RangeEndingTime:
+    description: >
+        end time UTC of the data (format hh:mm:ss.ssssss)
+    default: null
+    required: true
+ProductionDateTime:
+  description: >
+    the date and time that the file is generated (format YYYY-MM-DDT hh:mm:ss.ssssssZ, e.g., 2013-06-04T12:43:17.896000Z)
+  default: null
+  required: true
+ObservationArea:
+    description: >
+      Spatial coverage of the data (global or name of a geographic region)
+    default: null
+    required: false
+InputOriginalFile:
+    description: >
+      Input data files used to generate the file
+    default: null
+    required: false
+ProductGenerationAlgorithm:
+    description: >
+      The algorithm software used to produce the granule
+    default: null
+    required: false
+ProductGenerationAlgorithmVersion:
+    description: >
+      The version of algorithm that generates the product
+    default: null
+    required: false
+OriginalFileVersion:
+    description: >
+      Original File version
+    default: null
+    required: false
+OriginalFileProcessingCenter:
+    description: >
+      The data center or project where the product is generated
+    default: null
+    required: false
+SpatialCompletenessDefinition:
+    description: >
+      Definition of a measure of data quality: i.e. the ratio of grid elements containing valid values to total number of grid elements
+    default: null
+    required: false
+SpatialCompletenessRatio:
+    description: >
+      The data quality information: value for the previous metadata
+    default: null
+    required: false
