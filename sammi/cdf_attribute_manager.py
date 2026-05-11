@@ -535,8 +535,9 @@ class CdfAttributeManager:
 
         return output
 
-    def add_variable_attribute(self, variable_name: str, attribute_name: str,
-                               attribute_value: str) -> None:
+    def add_variable_attribute(
+        self, variable_name: str, attribute_name: str, attribute_value: str
+    ) -> None:
         """
         Add a single variable attribute to the variable attributes.
 
