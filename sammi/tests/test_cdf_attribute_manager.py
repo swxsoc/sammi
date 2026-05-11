@@ -489,6 +489,35 @@ def test_get_variable_attributes(cdf_manager):
     assert var_with_non_ascii_text["CATDESC"] == "α-particles"
 
 
+def test_add_variable_attribute(cdf_manager):
+    """Test that add_variable_attribute correctly adds a variable attribute."""
+    # Add a new variable with a single attribute
+    cdf_manager.add_variable_attribute("Epoch", "CATDESC", "Default time")
+    assert cdf_manager._variable_attributes["Epoch"]["CATDESC"] == "Default time"
+
+
+def test_add_variable_attribute_new_variable(cdf_manager):
+    """Test that add_variable_attribute creates a new variable entry if it doesn't exist."""
+    cdf_manager.add_variable_attribute("NewVar", "FIELDNAM", "New Variable")
+    assert "NewVar" in cdf_manager._variable_attributes
+    assert cdf_manager._variable_attributes["NewVar"]["FIELDNAM"] == "New Variable"
+
+
+def test_add_variable_attribute_overwrites_existing(cdf_manager):
+    """Test that add_variable_attribute overwrites an existing attribute value."""
+    cdf_manager.add_variable_attribute("Epoch", "CATDESC", "Original")
+    cdf_manager.add_variable_attribute("Epoch", "CATDESC", "Updated")
+    assert cdf_manager._variable_attributes["Epoch"]["CATDESC"] == "Updated"
+
+
+def test_add_variable_attribute_multiple_attributes(cdf_manager):
+    """Test that multiple attributes can be added to the same variable."""
+    cdf_manager.add_variable_attribute("Epoch", "CATDESC", "Default time")
+    cdf_manager.add_variable_attribute("Epoch", "FIELDNAM", "Epoch")
+    assert cdf_manager._variable_attributes["Epoch"]["CATDESC"] == "Default time"
+    assert cdf_manager._variable_attributes["Epoch"]["FIELDNAM"] == "Epoch"
+
+
 def test_sw_templates(cdf_manager):
     """Test Global and Variable Attribute Templates"""
 

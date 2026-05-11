@@ -535,6 +535,30 @@ class CdfAttributeManager:
 
         return output
 
+    def add_variable_attribute(
+        self, variable_name: str, attribute_name: str, attribute_value: str
+    ) -> None:
+        """
+        Add a single variable attribute to the variable attributes.
+
+        This is intended only for dynamic variable attributes which change per-file.
+        It is not intended to be used for static attributes, which
+        should all be included in the YAML files.
+
+        This will overwrite any existing value in attribute_name if it exists. The
+        attribute must be in the variable schema, or it will not be included as output.
+
+        Parameters
+        ----------
+        attribute_name : str
+            The name of the attribute to add.
+        attribute_value : str
+            The value of the attribute to add.
+        """
+        if variable_name not in self._variable_attributes:
+            self._variable_attributes[variable_name] = {}
+        self._variable_attributes[variable_name][attribute_name] = attribute_value
+
     def variable_attribute_template(self) -> dict:
         """
         Function to generate a template of required variable attributes
