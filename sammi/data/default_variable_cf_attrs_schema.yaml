@@ -24,7 +24,7 @@ units:
     Examples for unitless variables:
     fractions or ratio => "1" or "percent"
     number of pixels in a grid cell => "count"
-    index (or flag) variable => may exclude units
+    index (or flag) variable => Use a blank character
   default: null
   required: true
 valid_range:
