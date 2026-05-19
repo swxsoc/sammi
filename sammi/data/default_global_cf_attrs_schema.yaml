@@ -38,6 +38,7 @@ IdentifierProductDOI:
     10.5067/xxxxxx - product DOI number
   default: null
   required: true
+# also an attribute convention for data discovery (ACDD) global metadata
 Conventions:
   description: >
     This should be an attribute with the value, e.g., “CF-1.n,” where n=0, 1, 2, 3, ...
@@ -100,6 +101,7 @@ RelatedURL:
         Information about online sources related to the data
     default: null
     required: false
+#also an attribute convention for data discovery (ACDD) global metadata
 title:
     description: >
       A succinct description of the data set
@@ -127,9 +129,16 @@ ProductParameters:
       Keywords describing the data set
     default: null
     required: false
+# GES DISC optional attribute (singular keyword vs plural keywords for data discovery)
 Keyword:
     description: >
       Commonly-use word(s) or phrase(s), e.g., Deep Blue Algorithm
+    default: null
+    required: false
+# Attribute convention for data discovery (ACDD) global metadata
+Keywords:
+    description: >
+      A comma-separated list of key words and/or phrases. Keywords may be common words or phrases, terms from a controlled vocabulary (GCMD is often used), or URIs for terms from a controlled vocabulary (see also "keywords_vocabulary" attribute).
     default: null
     required: false
 ProcessingCenter:
@@ -167,6 +176,8 @@ DataResolution:
       Information about spatial resolution
     default: null
     required: false
+
+
 
 # Granule Level global metadata
 GranuleID:
@@ -239,3 +250,5 @@ SpatialCompletenessRatio:
       The data quality information: value for the previous metadata
     default: null
     required: false
+
+# Attribute Convention for Data Discovery (ACDD) global metadata
