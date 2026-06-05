@@ -1,46 +1,46 @@
 # https://cfconventions.org/Data/cf-conventions/cf-conventions-1.13/cf-conventions.html#attribute-appendix
 comment:
-  description: >
-    Miscellaneous information about the data or methods used to produce it.
-  default: null
-  required: false
+    description: >
+        Miscellaneous information about the data or methods used to produce it.
+    default: null
+    required: false
 Conventions:
-  description: >
-    Name of the conventions followed by the dataset.
-  default: null
-  required: true
+    description: >
+        Name of the conventions followed by the dataset.
+    default: null
+    required: true
 external_variables:
-  description: >
-    Identifies variables which are named by cell_measures attributes in the file but which are not present in the file.
-  default: null
-  required: false
+    description: >
+        Identifies variables which are named by cell_measures attributes in the file but which are not present in the file.
+    default: null
+    required: false
 featureType:
     description: >
         Specifies the type of discrete sampling geometry to which the data in the scope of this attribute belongs, and implies that all data variables in the scope of this attribute contain collections of features of that type.
     default: null
     required: false
 history:
-  description: >
-    List of the applications that have modified the original data.
-  default: null
-  required: false
+    description: >
+        List of the applications that have modified the original data.
+    default: null
+    required: false
 institution:
     description: >
-      Where the original data was produced.
+        Where the original data was produced.
     default: null
     required: false
 references:
     description: >
-      References that describe the data or methods used to produce it.
+        References that describe the data or methods used to produce it.
     default: null
     required: false
 source:
-  description: >
-    Method of production of the original data.
-  default: null
-  required: true
+    description: >
+        Method of production of the original data.
+    default: null
+    required: true
 title:
     description: >
-      Short description of the file contents.
+        Short description of the file contents.
     default: null
     required: false
