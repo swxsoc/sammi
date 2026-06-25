@@ -1,0 +1,185 @@
+# https://cfconventions.org/Data/cf-conventions/cf-conventions-1.13/cf-conventions.html#attribute-appendix
+
+actual_range:
+    description: >
+        The smallest and the largest valid non-missing values occurring in the variable.
+    default: null
+    required: false
+add_offset:
+    description: >
+        If present for a variable, this number is to be added to the data after it is read by an
+        application. If both scale_factor and add_offset attributes are present, the data are first
+        scaled before the offset is added. In cases where there is a strong constraint on dataset
+        size, it is allowed to pack the coordinate variables (using add_offset and/or scale_factor),
+        but this is not recommended in general.
+    default: null
+    required: false
+ancillary_variables:
+    description: >
+        Identifies a variable that contains closely associated data, e.g., the measurement
+        uncertainties of instrument data.
+    default: null
+    required: false
+cell_measures:
+    description: >
+        Identifies variables that contain cell areas or volumes.
+    default: null
+    required: false
+cell_methods:
+    description: >
+        Records the method used to derive data that represents cell values.
+    default: null
+    required: false
+comment:
+    description: >
+        Miscellaneous information about the data or methods used to produce it.
+    default: null
+    required: false
+coordinate_interpolation:
+    description: >
+        Indicates that coordinates have been compressed by sampling and identifies the tie point
+        coordinate variables and their associated interpolation variables.
+    default: null
+    required: false
+coordinates:
+    description: >
+        Identifies auxiliary coordinate variables, label variables, and alternate coordinate variables.
+    default: null
+    required: false
+_FillValue:
+    description: >
+        A value used to represent missing or undefined data. Allowed for auxiliary coordinate
+        variables but not allowed for coordinate variables.
+    default: null
+    required: false
+flag_masks:
+    description: >
+        Provides a list of bit fields expressing Boolean or enumerated flags.
+    default: null
+    required: false
+flag_meanings:
+    description: >
+        Use in conjunction with flag_values to provide descriptive words or phrases for each flag
+        value. If multi-word phrases are used to describe the flag values, then the words within a
+        phrase should be connected with underscores.
+    default: null
+    required: false
+flag_values:
+    description: >
+        Provides a list of the flag values. Use in conjunction with flag_meanings.
+    default: null
+    required: false
+geometry:
+    description: >
+        Identifies a variable that defines geometry.
+    default: null
+    required: false
+grid_mapping:
+    description: >
+        Identifies a variable that defines a grid mapping.
+    default: null
+    required: false
+institution:
+    description: >
+        Where the original data was produced.
+    default: null
+    required: false
+location:
+    description: >
+        Specifies the location type within the mesh topology at which the variable is defined.
+    default: null
+    required: false
+location_index_set:
+    description: >
+        Specifies a variable that defines the subset of locations of a mesh topology at which the
+        variable is defined.
+    default: null
+    required: false
+long_name:
+    description: >
+        A descriptive name that indicates a variable's content. This name is not standardized.
+    default: null
+    required: false
+mesh:
+    description: >
+        Specifies a variable that defines a mesh topology.
+    default: null
+    required: false
+missing_value:
+    description: >
+        A value or values used to represent missing or undefined data. Allowed for auxiliary
+        coordinate variables but not allowed for coordinate variables.
+    default: null
+    required: false
+quantization:
+    description: >
+        Identifies a variable that defines a quantization algorithm and its provenance.
+    default: null
+    required: false
+quantization_nsb:
+    description: >
+        Specifies the number of significant bits retained in the IEEE mantissa of data quantized
+        with the BitRound algorithm. Use in conjunction with quantization.
+    default: null
+    required: false
+quantization_nsd:
+    description: >
+        Specifies the number of significant base-10 digits retained in the IEEE mantissa of data
+        quantized with base-10 quantization algorithms. Use in conjunction with quantization.
+    default: null
+    required: false
+references:
+    description: >
+        References that describe the data or methods used to produce it.
+    default: null
+    required: false
+scale_factor:
+    description: >
+        If present for a variable, the data are to be multiplied by this factor after the data are
+        read by an application. See also the add_offset attribute. In cases where there is a strong
+        constraint on dataset size, it is allowed to pack the coordinate variables (using add_offset
+        and/or scale_factor), but this is not recommended in general.
+    default: null
+    required: false
+source:
+    description: >
+        Method of production of the original data.
+    default: null
+    required: false
+standard_error_multiplier:
+    description: >
+        If a data variable with a standard_name modifier of standard_error has this attribute, it
+        indicates that the values are the stated multiple of one standard error.
+    default: null
+    required: false
+standard_name:
+    description: >
+        A standard name that references a description of a variable's content in the standard
+        name table.
+    default: null
+    required: false
+units:
+    description: >
+        Units of a variable's content.
+    default: null
+    required: false
+units_metadata:
+    description: >
+        Specifies the interpretation of a unit of measure appearing in the units attribute.
+    default: null
+    required: false
+valid_max:
+    description: >
+        Largest valid value of a variable.
+    default: null
+    required: false
+valid_min:
+    description: >
+        Smallest valid value of a variable.
+    default: null
+    required: false
+valid_range:
+    description: >
+        Smallest and largest valid values of a variable.
+    default: null
+    required: false

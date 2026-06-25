@@ -1,0 +1,60 @@
+# Schema is based on the CF Schema is based on CF conventions as defined by NASA GES DISC Archive's
+## Data and Metadata Recommendations to Data providers document:
+## https://docserver.gesdisc.eosdis.nasa.gov/public/project/DataPub/GES_DISC_metadata_and_data_formats.pdf
+
+long_name:
+  description: >
+    Parameter long name; recommend using underscore as delimiter; not recommend using dash and white space
+  default: null
+  required: true
+standard_name:
+  description: >
+    Parameter name recommended by CF-convention community (https://cfconventions.org/)
+  default: null
+  required: false
+_FillValue:
+  description: >
+    Fill value or missing value (format: number, e.g., float or double, integer). Not for coordinate variables.
+    For variables that contain two types of missing values, we recommend adding a flag variable to indicate the missing data type.
+  default: null
+  required: true
+units:
+  description: >
+    Must follow standards for coordinate (or dimension) variables, such as longitude, latitude, and time (Sec. 2.3.4).
+    Examples for unitless variables:
+    fractions or ratio => "1" or "percent"
+    number of pixels in a grid cell => "count"
+    index (or flag) variable => Use a blank character
+  default: null
+  required: true
+valid_range:
+  description: >
+    Valid minimum and maximum values
+  default: null
+  required: false
+scale_factor:
+  description: >
+    Scaling factor (use for scaled variables)
+  default: null
+  required: false
+scale_offset:
+  description: >
+    Scaling offset (use for scaled variables)
+  default: null
+  required: false
+flag_values:
+  description: >
+    Values of data quality flag or any other flag index variable, e.g., flag_values = 1, 2, 3, 4
+  default: null
+  required: false
+flag_meanings:
+  description: >
+    Meanings of flag values, e.g., flag_meanings = no_confidence, marginal, good, very_good for flag_values = 1, 2, 3, 4, respectively
+  default: null
+  required: false
+comments:
+  description: >
+    Additional description or comments about a parameter
+  default: null
+  required: false
+

@@ -1,0 +1,31 @@
+# https://wiki.esipfed.org/Attribute_Convention_for_Data_Discovery_1-3#Global_Attributes
+
+long_name:
+    description: >
+        A long descriptive name for the variable (not necessarily from a controlled vocabulary).
+        This attribute is recommended by the NetCDF Users Guide, the COARDS convention, and the
+        CF convention.
+    default: null
+    required: false
+standard_name:
+    description: >
+        A long descriptive name for the variable taken from a controlled vocabulary of variable
+        names. We recommend using the CF convention and the variable names from the CF standard
+        name table. This attribute is recommended by the CF convention.
+    default: null
+    required: false
+units:
+    description: >
+        The units of the variable's data values. This attribute value should be a valid udunits
+        string. The "units" attribute is recommended by the NetCDF Users Guide, the COARDS
+        convention, and the CF convention.
+    default: null
+    required: false
+coverage_content_type:
+    description: >
+        An ISO 19115-1 code to indicate the source of the data (image, thematicClassification,
+        physicalMeasurement, auxiliaryInformation, qualityInformation, referenceInformation,
+        modelResult, or coordinate).
+    default: null
+    required: false
+
